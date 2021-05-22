@@ -42,6 +42,8 @@ class OID_all:
     test = False
     top = None
 
+    width = 3
+
     canvas = None
     ################
 
@@ -78,8 +80,18 @@ class OID_all:
 
         size = 45
         # Width 3 and 4 looks like what I'll go with.
-        L_button = self.canvas.create_oval(
+        self.canvas.create_oval(
             20, 91, 55, 128, outline="black", width=3, fill=self.determine_fill(self.l)
+        )
+
+        self.canvas.create_oval(
+            62,
+            64,
+            97,
+            101,
+            outline="black",
+            width=self.width,
+            fill=self.determine_fill(self.g_left),
         )
 
         self.my_after()
@@ -92,7 +104,20 @@ class OID_all:
 
     def redraw_new_inputs(self):
         new_inputs = self.get_input()
-        if new_inputs[0][7] != self.l:
+
+        if new_inputs[0][4] != self.start:
+            self.start = not self.start
+            self.canvas.create_oval(
+                286,
+                79,
+                321,
+                116,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.start),
+            )
+
+        if new_inputs[0][7] != self.l:  # L button
             self.l = not self.l
             L_button = self.canvas.create_oval(
                 20,
@@ -100,8 +125,68 @@ class OID_all:
                 55,
                 128,
                 outline="black",
-                width=3,
+                width=self.width,
                 fill=self.determine_fill(self.l),
+            )
+
+        if new_inputs[1][1] != self.g_down:
+            self.g_down = not self.g_down
+            self.canvas.create_oval(
+                109,
+                59,
+                144,
+                96,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.g_down),
+            )
+
+        if new_inputs[1][2] != self.g_left:  # Grey Stick Left
+            self.g_left = not self.g_left
+            self.canvas.create_oval(
+                62,
+                64,
+                97,
+                101,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.g_left),
+            )
+
+        if new_inputs[1][3] != self.g_right:
+            self.g_right = not self.g_right
+            self.canvas.create_oval(
+                153,
+                79,
+                188,
+                116,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.g_right),
+            )
+
+        if new_inputs[3][0] != self.mod_x:
+            self.mod_x = not self.mod_x
+            self.canvas.create_oval(
+                165,
+                190,
+                200,
+                227,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.mod_x),
+            )
+
+        if new_inputs[3][1] != self.mod_y:
+            self.mod_y = not self.mod_y
+            self.canvas.create_oval(
+                203,
+                215,
+                238,
+                252,
+                outline="black",
+                width=self.width,
+                fill=self.determine_fill(self.mod_y),
             )
         # else:  # do this for every other of the 19 buttons
 
