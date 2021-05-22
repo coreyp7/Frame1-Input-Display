@@ -1,14 +1,49 @@
 import joystickapi
 import msvcrt
 import time
+import os
+from tkinter import *
 
 
-class OID_model:
+class OID_all:
     ret = False
     caps = None
     startInfo = None
     num = 0
     id = None
+    last_input = []
+    #
+    a = False
+    b = False
+    x = False
+    y = False
+    start = False
+    z = False
+    r = False
+    l = False
+
+    g_up = False
+    g_down = False
+    g_left = False
+    g_right = False
+
+    c_up = False
+    c_down = False
+    c_left = False
+    c_right = False
+
+    mod_x = False
+    mod_y = False
+    #
+    ## VIEW STUFF ##
+    on_color = "black"
+    off_color = "white"
+
+    test = False
+    top = None
+
+    canvas = None
+    ################
 
     def __init__(self):
         print("start")
@@ -25,46 +60,50 @@ class OID_model:
         else:
             print("no gamepad detected")
 
-    def start_normal_operation(self):
+    def start_exe(self):
+        self.top = Tk()
 
-        print("start")
+        self.canvas = Canvas(self.top, height=480, width=720)
 
-        num = joystickapi.joyGetNumDevs()
-        ret, caps, startinfo = False, None, None
-        for id in range(num):
-            ret, caps = joystickapi.joyGetDevCaps(id)
-            if ret:
-                print("gamepad detected: " + caps.szPname)
-                ret, startinfo = joystickapi.joyGetPosEx(id)
-                break
-        else:
-            print("no gamepad detected")
+        self.canvas.pack(expand=YES, fill=BOTH)
 
-        run = ret
-        while run:
-            time.sleep(0.05)
-            if msvcrt.kbhit() and msvcrt.getch() == chr(27).encode():  # detect ESC
-                run = False
+        cp = os.getcwd()
+        # print(cp)
+        # cp += "\Frame1-Display\FRAME1_LIGHT_FRONT_LAYOUT.gif"
+        # print(cp)
 
-            ret, info = joystickapi.joyGetPosEx(id)
-            if ret:
-                btns = [(1 << i) & info.dwButtons != 0 for i in range(caps.wNumButtons)]
-                axisXYZ = [
-                    info.dwXpos - startinfo.dwXpos,
-                    info.dwYpos - startinfo.dwYpos,
-                    info.dwZpos - startinfo.dwZpos,
-                ]
-                axisRUV = [
-                    info.dwRpos - startinfo.dwRpos,
-                    info.dwUpos - startinfo.dwUpos,
-                    info.dwVpos - startinfo.dwVpos,
-                ]
+        # Inserting frame1 photo for reference
+        img = PhotoImage(file="FRAME1_LIGHT_FRONT_LAYOUT.gif")
+        self.canvas.create_image(0, 0, anchor=NW, image=img)
 
-                formatted_input_info = btns, axisXYZ, axisRUV
-                # print(formatted_input_info)
-                formatted_input_info = self.format_input(formatted_input_info)
-                # print(formatted_input_info)
-                self.display_nice(formatted_input_info)
+        size = 45
+        # Width 3 and 4 looks like what I'll go with.
+        L_button = self.canvas.create_oval(
+            20, 91, 55, 128, outline="black", width=3, fill=self.determine_fill(self.l)
+        )
+
+        self.my_after()
+
+        self.top.mainloop()
+
+    def my_after(self):
+        self.redraw_new_inputs()  # Redraw appropriate buttons here
+        self.top.after(50, self.my_after)  # Repeat in 75
+
+    def redraw_new_inputs(self):
+        new_inputs = self.get_input()
+        if new_inputs[0][7] != self.l:
+            self.l = not self.l
+            L_button = self.canvas.create_oval(
+                20,
+                91,
+                55,
+                128,
+                outline="black",
+                width=3,
+                fill=self.determine_fill(self.l),
+            )
+        # else:  # do this for every other of the 19 buttons
 
     def get_input(self):
         self.ret, self.info = joystickapi.joyGetPosEx(self.id)
@@ -179,52 +218,12 @@ class OID_model:
             return True
         return False
 
-    def display_nice(self, var):
-        if var[0][0]:
-            print("A")
-        if var[0][1]:
-            print("B")
-        if var[0][2]:
-            print("X")
-        if var[0][3]:
-            print("Y")
-        if var[0][4]:
-            print("Start")
-        if var[0][5]:
-            print("Z")
-        if var[0][6]:
-            print("R")
-        if var[0][7]:
-            print("L")
-        if var[0][8]:
-            print("LS1")
-        if var[0][9]:
-            print("LS2")
-        if var[1][0]:
-            print("UP")
-        if var[1][1]:
-            print("DOWN")
-        if var[1][2]:
-            print("LEFT")
-        if var[1][3]:
-            print("RIGHT")
-        if var[2][0]:
-            print("C-UP")
-        if var[2][1]:
-            print("C-DOWN")
-        if var[2][2]:
-            print("C-LEFT")
-        if var[2][3]:
-            print("C-RIGHT")
-        if var[3][0]:
-            print("ModX")
-        if var[3][1]:
-            print("ModY")
+    def determine_fill(self, state):
+        switcher = {True: self.on_color, False: self.off_color}
+        return switcher.get(state, "ERROR")
 
 
 if __name__ == "__main__":
-    model = OID_model()
-    # model.start_normal_operation()
-    while True:
-        print(model.get_input())
-        time.sleep(1)
+    exe = OID_all()
+    exe.start_exe()
+
