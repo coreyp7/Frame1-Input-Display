@@ -1,11 +1,35 @@
+import tkinter
 import joystickapi
 import msvcrt
 import time
 import os
-from tkinter import *
+
+# from tkinter import *
+import pickle
+from tkinter import (
+    Spinbox,
+    Tk,
+    Label,
+    Button,
+    ttk,
+    Toplevel,
+    Entry,
+    Menu,
+    font,
+    Radiobutton,
+    Scrollbar,
+    Listbox,
+    Checkbutton,
+    Frame,
+    YES,
+    NO,
+    BOTH,
+    Canvas,
+    colorchooser,
+)
 
 
-class OID_all:
+class Frame1_Input_Display:
     ret = False
     caps = None
     startInfo = None
@@ -42,25 +66,62 @@ class OID_all:
     a_button_display = None
     #
     ## VIEW STUFF ##
-    on_color = "white"
-    off_color = "green"
-    outline = "white"
-
-    test = False
     top = None
-
-    width = 3
-
     canvas = None
+
+    # test = False
+    # Button Details
+    width = 5
+    # on_color = "white"
+    on_color = "#FFFFFF"
+    off_color = "#000000"
+    outline = "#FFFFFF"
+    background = "#000000"
+
+    # window_width
+    # window_height
     ################
+
+    # a subclass of Canvas for dealing with resizing of windows
+
+    def save(self):
+        final_dump = [
+            self.width,
+            self.canvas.width,
+            self.canvas.height,
+        ]
+        pickle_file = open("config.txt", "wb")
+        pickle_file.truncate(0)
+        pickle.dump(final_dump, pickle_file)
+
+    def load(self):
+        load = pickle.load(open("config.txt", "rb"))
+        self.width = load[0]
+        self.window_width = load[1]
+        self.window_height = load[2]
+
+    """def on_closing(self):
+        self.save()
+        self.top.destroy()"""
 
     def __init__(self):
         print("start")
 
+        try:
+            self.load()
+        except:
+            print("No previous settings.")
+            self.window_width = 600
+            self.window_height = 276
+            pass
+
         self.num = joystickapi.joyGetNumDevs()
         self.ret, self.caps, self.startinfo = False, None, None
         for id in range(self.num):
+            print(id)
             self.ret, self.caps = joystickapi.joyGetDevCaps(id)
+            print(self.ret)
+            print(self.caps)
             if self.ret:
                 print("gamepad detected: " + self.caps.szPname)
                 self.ret, self.startinfo = joystickapi.joyGetPosEx(id)
@@ -110,52 +171,184 @@ class OID_all:
             else:
                 self.rotation_positive = False
 
+    def settings_window(self):
+        win = tkinter.Toplevel()
+        win.configure(background=self.background)
+        win.wm_title("Options: Settings")
+        win.geometry("500x300")
+        win.resizable(width=False, height=False)
+        win.columnconfigure(0, weight=1)
+        win.rowconfigure(0, weight=1)
+        # win.columnconfigure(1, weight=1)
+        win.rowconfigure(1, weight=1)
+        win.rowconfigure(2, weight=0)
+
+        topframe = Frame(win, bg=self.background)
+        topframe.grid(column=0, row=0)
+        middleframe = Frame(win, bg=self.background)
+        middleframe.grid(column=0, row=1)
+        bottomframe = Frame(win, bg=self.background)
+        bottomframe.grid(column=0, row=2)
+
+        ###
+
+        width_label = Label(
+            topframe,
+            text="Outline thickness:",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+
+        width_spin_var = tkinter.StringVar()
+
+        width_spinbox = Spinbox(
+            topframe, from_=1, to=5, textvariable=width_spin_var, state="readonly"
+        )
+        width_spinbox.grid(row=0, column=1)
+
+        ###
+        lock_window_var = tkinter.BooleanVar()
+        Checkbutton(
+            middleframe,
+            text="Lock Window Size",
+            variable=lock_window_var,
+            fg=self.outline,
+            bg=self.background,
+            onvalue=True,
+            offvalue=False,
+            selectcolor=self.background,
+            activeforeground=self.background,
+        ).grid(row=0, column=0)
+
+        ### OK and CANCEL buttons
+        def change_and_close_window():
+            self.width = width_spinbox.get()
+            self.top.destroy()
+            self.start_exe()
+
+        ok_button = Button(
+            bottomframe,
+            text="Ok",
+            command=change_and_close_window,
+            bg=self.background,
+            fg=self.on_color,
+        )
+        ok_button.grid(row=0, column=0)
+
+    def colors_window(self):
+        win = tkinter.Toplevel()
+        win.configure(background=self.background)
+        win.wm_title("Options: Settings")
+        win.geometry("500x300")
+        win.resizable(width=False, height=False)
+        win.columnconfigure(0, weight=1)
+        win.rowconfigure(0, weight=1)
+
+        frame = Frame(win, bg=self.background)
+        frame.grid(column=0, row=0)
+
+        width_label = Label(
+            frame,
+            text="Outline thickness:",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+
+        width_spin_var = tkinter.StringVar()
+
+        width_spinbox = Spinbox(frame, from_=1, to=5, textvariable=width_spin_var)
+        width_spinbox.grid(row=0, column=1)
+        """
+        width_label_combo = ttk.Combobox(
+            frame, state="readonly", textvariable=width_label_var, width=10,
+        )
+        width_label_combo["values"] = [
+            "2",
+            "3",
+            "4",
+            "5",
+        ]
+        for i in width_label_combo["values"]:
+            print("i:" + i)
+            print("width:" + str(self.width))
+            if i == str(self.width):
+                print("MATCHED")
+                width_label_combo.current(width_label_combo["values"].index(i))
+        # width_label_combo.current(0)
+        width_label_combo.grid(row=0, column=1)"""
+
+        button_on_color_label = Label(
+            frame,
+            text="Button press color:",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        button_on_color_label.grid(row=1, column=0)
+        button_on_color_var = tkinter.StringVar()
+
+        def choose_color():
+            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+            self.on_color = color_code[1]
+
+        color_code_button = Button(
+            frame,
+            command=choose_color,
+            text='Change "Button Press" Color',
+            bg=self.on_color,
+        )
+        color_code_button.grid(row=1, column=1)
+
     def start_exe(self):
         self.top = Tk()
-        frame = Frame(self.top)
-        frame.pack()
+        self.top.title("Frame1 Display")
+        # self.top.bind("<Configure>", self.on_resize)
+        # self.top.resizable(False, False)
+        self.frame = Frame(self.top, width=self.window_width, height=self.window_height)
+        self.frame.pack(fill=BOTH, expand=YES)
 
-        self.canvas = Canvas(frame, height=480, width=720, background="green")
-
-        self.canvas.pack(expand=YES, fill=BOTH)
-
-        # print(cp)
-        # cp += "\Frame1-Display\FRAME1_LIGHT_FRONT_LAYOUT.gif"
-        # print(cp)
-
-        # Inserting frame1 photo for reference
-        # cp = os.getcwd()
-        # img = PhotoImage(file="FRAME1_LIGHT_FRONT_LAYOUT.gif")
-        # self.canvas.create_image(0, 0, anchor=NW, image=img)
-
-        # Width 3 and 4 looks like what I'll go with.
-        """
-        self.canvas.create_oval(
-            20, 91, 55, 128, outline="black", width=3, fill=self.determine_fill(self.l)
+        # ResizingCanvas created here
+        self.canvas = ResizingCanvas(
+            self.frame,
+            height=self.window_height,
+            width=self.window_width,
+            background=self.background,
+            highlightthickness=0,
         )
+        # self.canvas.pack(fill=BOTH, expand=YES)
+        self.canvas.pack(expand=YES, fill=BOTH)
+        # self.canvas.bind("<Configure>", self.on_resize)
 
-        self.canvas.create_oval(
-            62,
-            64,
-            97,
-            101,
-            outline="black",
-            width=self.width,
-            fill=self.determine_fill(self.g_left),
-        )"""
-        # self.redraw_new_inputs()
+        # Menubar stuff
+        menubar = Menu(self.top, bg=self.background, fg="white")
+        self.top.config(menu=menubar)
+        file_menu = Menu(menubar, tearoff=0, bg="white", fg="black")
+        file_menu.add_command(label="Settings", command=self.settings_window)
+        file_menu.add_command(label="Colors", command=self.colors_window)
+        file_menu.add_command(label="Save Current Settings", command=self.save)
+
+        menubar.add_cascade(label="Options", menu=file_menu)
+
         self.instantiate_ovals()
 
+        self.canvas.addtag_all("all")
+
         self.my_after()
-        # self.reset_canvas()
+
         self.top.mainloop()
 
+    """
     def reset_canvas(self):
         self.canvas = Canvas(self.top, height=480, width=720, background="green")
-        self.top.after(1000000, self.reset_canvas)
+        self.top.after(1000000, self.reset_canvas)"""
 
     def my_after(self):
         self.redraw_new_inputs()  # Redraw appropriate buttons here
+        # print(self.canvas.height, self.canvas.width)
         self.top.after(25, self.my_after)  # Repeat in 75
 
     def instantiate_ovals(self):
@@ -503,7 +696,6 @@ class OID_all:
 
             formatted_input_info = btns, axisXYZ, axisRUV
             # print(formatted_input_info)
-            # print(formatted_input_info)
             formatted_input_info = self.format_input(formatted_input_info)
             # print(formatted_input_info)
             return formatted_input_info
@@ -551,6 +743,32 @@ class OID_all:
             c_stick[0] = True
         elif rotation[1] < 0:
             c_stick[1] = True
+
+        # For when wavedashing right with modx
+        if axis[0] == 15084 and axis[1] == -6400:
+            mod_buttons[0] = True
+
+        # For when wavedashing left with modx
+        if axis[0] == -15104 and axis[1] == -6400:
+            mod_buttons[0] = True
+
+        # This is to keep modx on when wavedashing (Otherwise, it will flicker off)
+        if axis[0] == 13004 and axis[1] == -7680:
+            mod_buttons[0] = True
+        if axis[0] == -13056 and axis[1] == -7680:
+            mod_buttons[0] = True
+
+        # This is to keep mody on when wavedashing (Otherwise, it will flicker off)
+        if axis[0] == 10143 and axis[1] == -17407:
+            mod_buttons[1] = True
+        if axis[0] == -10240 and axis[1] == -17407:
+            mod_buttons[1] = True
+
+        # This is to check for up/left and up/right with modx. (It works with mody for some reason)
+        if axis[0] == 15084 and axis[1] == 6242:
+            mod_buttons[0] = True
+        if axis[0] == -15104 and axis[1] == 6242:
+            mod_buttons[0] = True
 
         # set light sheild buttons back in general_buttons (NOTE: adding elements)
         """if rotation[0] > 12543:
@@ -618,7 +836,49 @@ class OID_all:
         return switcher.get(state, "ERROR")
 
 
+# TEMPORARY SOLUTION FROM INTERNET
+# Will be natively integrated in Frame1_Display or will be abandoned
+# for strict resolutions for display integrity.
+class ResizingCanvas(Canvas):
+    def __init__(self, parent, **kwargs):
+        Canvas.__init__(self, parent, **kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
+    def on_resize(self, event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width) / self.width
+        hscale = float(event.height) / self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all", 0, 0, wscale, hscale)
+
+
+"""
+class ResizingCanvas(Canvas):
+    def __init__(self, parent, **kwargs):
+        Canvas.__init__(self, parent, **kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
+    def on_resize(self, event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width) / self.width
+        hscale = float(event.height) / self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all", 0, 0, wscale, hscale)
+"""
+
 if __name__ == "__main__":
-    exe = OID_all()
+    exe = Frame1_Input_Display()
     exe.start_exe()
 
