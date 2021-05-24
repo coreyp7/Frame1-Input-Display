@@ -78,6 +78,14 @@ class Frame1_Input_Display:
     outline = "#FFFFFF"
     background = "#000000"
 
+    resizeable = False
+
+    set_res = "600x276"
+
+    scale = 1
+
+    boot_warning = True
+
     # window_width
     # window_height
     ################
@@ -85,11 +93,7 @@ class Frame1_Input_Display:
     # a subclass of Canvas for dealing with resizing of windows
 
     def save(self):
-        final_dump = [
-            self.width,
-            self.canvas.width,
-            self.canvas.height,
-        ]
+        final_dump = [self.width, self.set_res, self.scale, self.boot_warning]
         pickle_file = open("config.txt", "wb")
         pickle_file.truncate(0)
         pickle.dump(final_dump, pickle_file)
@@ -97,8 +101,11 @@ class Frame1_Input_Display:
     def load(self):
         load = pickle.load(open("config.txt", "rb"))
         self.width = load[0]
-        self.window_width = load[1]
-        self.window_height = load[2]
+        self.set_res = load[1]
+        self.window_width = self.set_res.split("x")[0]
+        self.window_height = self.set_res.split("x")[1]
+        self.scale = load[2]
+        self.boot_warning = load[3]
 
     """def on_closing(self):
         self.save()
@@ -113,15 +120,16 @@ class Frame1_Input_Display:
             print("No previous settings.")
             self.window_width = 600
             self.window_height = 276
+            self.scale = 1
             pass
+
+        if self.boot_warning:
+            self.boot_warning_window()
 
         self.num = joystickapi.joyGetNumDevs()
         self.ret, self.caps, self.startinfo = False, None, None
         for id in range(self.num):
-            print(id)
             self.ret, self.caps = joystickapi.joyGetDevCaps(id)
-            print(self.ret)
-            print(self.caps)
             if self.ret:
                 print("gamepad detected: " + self.caps.szPname)
                 self.ret, self.startinfo = joystickapi.joyGetPosEx(id)
@@ -129,6 +137,8 @@ class Frame1_Input_Display:
                 break
         else:
             print("no gamepad detected")
+            self.no_frame1_window()
+            exit(1)
 
         # NOTE: have to wait a second for some reason to allow for proper calibration of roation_positive.
         time.sleep(0.5)
@@ -171,6 +181,58 @@ class Frame1_Input_Display:
             else:
                 self.rotation_positive = False
 
+    def no_frame1_window(self):
+        self.top = Tk()
+        self.top.configure(background=self.background)
+        self.top.wm_title("No Frame1 :(")
+        self.top.geometry("500x300")
+        self.top.resizable(width=False, height=False)
+        self.top.columnconfigure(0, weight=1)
+        self.top.rowconfigure(0, weight=1)
+        # win.columnconfigure(1, weight=1)
+        frame = Frame(self.top, bg=self.background)
+        frame.grid(column=0, row=0)
+
+        width_label = Label(
+            frame,
+            text="No Frame1 is detected.\nMake sure your controller is plugged in, and that \nthere are no other controllers plugged in.",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+        self.top.mainloop()
+
+    def boot_warning_window(self):
+        self.top = Tk()
+        self.top.configure(background=self.background)
+        self.top.wm_title("Warning")
+        self.top.geometry("500x300")
+        self.top.resizable(width=False, height=False)
+        self.top.columnconfigure(0, weight=1)
+        self.top.rowconfigure(0, weight=1)
+        # win.columnconfigure(1, weight=1)
+        frame = Frame(self.top, bg=self.background)
+        frame.grid(column=0, row=0)
+
+        width_label = Label(
+            frame,
+            text="Press 'Ok' when you're ready to detect your Frame1.\n(No other controllers can be plugged in, sorry.)",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+        ok_button = Button(
+            frame,
+            text="Ok",
+            command=self.top.destroy,
+            bg=self.background,
+            fg=self.on_color,
+        )
+        ok_button.grid(row=1, column=0)
+        self.top.mainloop()
+
     def settings_window(self):
         win = tkinter.Toplevel()
         win.configure(background=self.background)
@@ -178,9 +240,9 @@ class Frame1_Input_Display:
         win.geometry("500x300")
         win.resizable(width=False, height=False)
         win.columnconfigure(0, weight=1)
-        win.rowconfigure(0, weight=1)
+        win.rowconfigure(0, weight=2)
         # win.columnconfigure(1, weight=1)
-        win.rowconfigure(1, weight=1)
+        win.rowconfigure(1, weight=2)
         win.rowconfigure(2, weight=0)
 
         topframe = Frame(win, bg=self.background)
@@ -190,7 +252,7 @@ class Frame1_Input_Display:
         bottomframe = Frame(win, bg=self.background)
         bottomframe.grid(column=0, row=2)
 
-        ###
+        ### top frame
 
         width_label = Label(
             topframe,
@@ -202,13 +264,38 @@ class Frame1_Input_Display:
         width_label.grid(row=0, column=0)
 
         width_spin_var = tkinter.StringVar()
-
+        width_spin_var.set(str(self.outline))
         width_spinbox = Spinbox(
-            topframe, from_=1, to=5, textvariable=width_spin_var, state="readonly"
+            topframe,
+            from_=1,
+            to=5,
+            textvariable=width_spin_var,
+            state="readonly",
+            width=5,
         )
         width_spinbox.grid(row=0, column=1)
 
-        ###
+        base_resolution_label = Label(
+            topframe,
+            text="Base Resolution:",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        base_resolution_label.grid(row=1, column=0)
+
+        base_resolution_var = tkinter.StringVar()
+
+        base_resolution_combo = ttk.Combobox(
+            topframe, state="readonly", textvariable=base_resolution_var, width=10
+        )
+        base_resolution_combo["values"] = ["600x276", "900x414", "1200x552"]
+        for i in base_resolution_combo["values"]:
+            if i == self.set_res:
+                base_resolution_combo.current(base_resolution_combo["values"].index(i))
+        base_resolution_combo.grid(row=1, column=1)
+
+        ### middle frame
         lock_window_var = tkinter.BooleanVar()
         Checkbutton(
             middleframe,
@@ -216,15 +303,42 @@ class Frame1_Input_Display:
             variable=lock_window_var,
             fg=self.outline,
             bg=self.background,
-            onvalue=True,
-            offvalue=False,
+            onvalue=False,
+            offvalue=True,
             selectcolor=self.background,
             activeforeground=self.background,
         ).grid(row=0, column=0)
 
-        ### OK and CANCEL buttons
+        boot_warning_var = tkinter.BooleanVar()
+        Checkbutton(
+            middleframe,
+            text="Wait for user confirmation on launch (intro window)",
+            variable=boot_warning_var,
+            fg=self.outline,
+            bg=self.background,
+            onvalue=True,
+            offvalue=False,
+            selectcolor=self.background,
+            activeforeground=self.background,
+        ).grid(row=1, column=0)
+
+        ### OK and CANCEL buttons - bottom frame
         def change_and_close_window():
             self.width = width_spinbox.get()
+            self.resizeable = lock_window_var.get()
+            self.window_width = base_resolution_var.get().split("x")[0]
+            self.window_height = base_resolution_var.get().split("x")[1]
+            # This is dumb and messy, but this properly sets the scaling
+            # depending on the resolution. Goes by place in array.
+            if base_resolution_combo["values"].index(base_resolution_var.get()) == 0:
+                self.scale = 1
+            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 1:
+                self.scale = 1.5
+            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 2:
+                self.scale = 2
+            self.set_res = base_resolution_var.get()
+            self.boot_warning = boot_warning_var.get()
+            ##
             self.top.destroy()
             self.start_exe()
 
@@ -310,6 +424,11 @@ class Frame1_Input_Display:
         # self.top.resizable(False, False)
         self.frame = Frame(self.top, width=self.window_width, height=self.window_height)
         self.frame.pack(fill=BOTH, expand=YES)
+        # Checking for if the window is resizable.
+        if self.resizeable:
+            self.top.resizable(True, True)
+        else:
+            self.top.resizable(False, False)
 
         # ResizingCanvas created here
         self.canvas = ResizingCanvas(
@@ -353,200 +472,200 @@ class Frame1_Input_Display:
 
     def instantiate_ovals(self):
         self.a_button_display = self.canvas.create_oval(  # A BUTTON
-            406,
-            189,
-            441,
-            226,
+            406 * self.scale,
+            189 * self.scale,
+            441 * self.scale,
+            226 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.a),
         )
 
         self.b_button_display = self.canvas.create_oval(  # B BUTTON
-            417,
-            79,
-            452,
-            116,
+            417 * self.scale,
+            79 * self.scale,
+            452 * self.scale,
+            116 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.b),
         )
 
         self.x_button_display = self.canvas.create_oval(  # X BUTTON
-            461,
-            59,
-            496,
-            96,
+            461 * self.scale,
+            59 * self.scale,
+            496 * self.scale,
+            96 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.x),
         )
 
         self.y_button_display = self.canvas.create_oval(  # Y BUTTON
-            461,
-            11,
-            496,
-            48,
+            461 * self.scale,
+            11 * self.scale,
+            496 * self.scale,
+            48 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.y),
         )
 
         self.start_button_display = self.canvas.create_oval(  # START BUTTON
-            286,
-            79,
-            321,
-            116,
+            286 * self.scale,
+            79 * self.scale,
+            321 * self.scale,
+            116 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.start),
         )
 
         self.z_button_display = self.canvas.create_oval(  # Z BUTTON
-            508,
-            64,
-            543,
-            101,
+            508 * self.scale,
+            64 * self.scale,
+            543 * self.scale,
+            101 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.z),
         )
 
         self.r_button_display = self.canvas.create_oval(  # R BUTTON
-            417,
-            31,
-            452,
-            68,
+            417 * self.scale,
+            31 * self.scale,
+            452 * self.scale,
+            68 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.r),
         )
 
         self.l_button_display = self.canvas.create_oval(  # L BUTTON
-            20,
-            91,
-            55,
-            128,
+            20 * self.scale,
+            91 * self.scale,
+            55 * self.scale,
+            128 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.l),
         )
 
         self.ls1_button_display = self.canvas.create_oval(  # LS1 BUTTON
-            508,
-            17,
-            543,
-            53,
+            508 * self.scale,
+            17 * self.scale,
+            543 * self.scale,
+            53 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.ls1),
         )
 
         self.ls2_button_display = self.canvas.create_oval(  # LS2 BUTTON
-            552,
-            45,
-            587,
-            82,
+            552 * self.scale,
+            45 * self.scale,
+            587 * self.scale,
+            82 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.ls2),
         )
 
         self.g_up_button_display = self.canvas.create_oval(  # GREYSTICK UP
-            552,
-            88,
-            587,
-            125,
+            552 * self.scale,
+            88 * self.scale,
+            587 * self.scale,
+            125 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.g_up),
         )
 
         self.g_down_button_display = self.canvas.create_oval(  # GREYSTICK DOWN
-            109,
-            59,
-            144,
-            96,
+            109 * self.scale,
+            59 * self.scale,
+            144 * self.scale,
+            96 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.g_down),
         )
 
         self.g_left_button_display = self.canvas.create_oval(  # GREYSTICK LEFT
-            62,
-            64,
-            97,
-            101,
+            62 * self.scale,
+            64 * self.scale,
+            97 * self.scale,
+            101 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.g_left),
         )
 
         self.g_right_button_display = self.canvas.create_oval(  # GREYSTICK RIGHT
-            153,
-            79,
-            188,
-            116,
+            153 * self.scale,
+            79 * self.scale,
+            188 * self.scale,
+            116 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.g_right),
         )
 
         self.c_up_button_display = self.canvas.create_oval(  # CSTICK UP
-            406,
-            139,
-            441,
-            176,
+            406 * self.scale,
+            139 * self.scale,
+            441 * self.scale,
+            176 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.c_up),
         )
 
         self.c_down_button_display = self.canvas.create_oval(  # CSTICK DOWN
-            368,
-            216,
-            403,
-            253,
+            368 * self.scale,
+            216 * self.scale,
+            403 * self.scale,
+            253 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.c_down),
         )
 
         self.c_left_button_display = self.canvas.create_oval(  # CSTICK LEFT
-            368,
-            166,
-            403,
-            203,
+            368 * self.scale,
+            166 * self.scale,
+            403 * self.scale,
+            203 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.c_left),
         )
 
         self.c_right_button_display = self.canvas.create_oval(  # CSTICK RIGHT
-            443,
-            166,
-            478,
-            203,
+            443 * self.scale,
+            166 * self.scale,
+            478 * self.scale,
+            203 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.c_right),
         )
 
         self.mod_x_button_display = self.canvas.create_oval(  # MOD X
-            165,
-            190,
-            200,
-            227,
+            165 * self.scale,
+            190 * self.scale,
+            200 * self.scale,
+            227 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.mod_x),
         )
 
         self.mod_y_button_display = self.canvas.create_oval(  # MOD Y
-            203,
-            215,
-            238,
-            252,
+            203 * self.scale,
+            215 * self.scale,
+            238 * self.scale,
+            252 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.mod_y),
