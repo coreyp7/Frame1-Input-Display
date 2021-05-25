@@ -206,32 +206,43 @@ class Frame1_Input_Display:
 
         def choose_color_on_color():
             color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            self.on_color = color_code[1]
-            # win.destroy()
-            self.top.destroy()
-            self.start_exe()
+            if color_code[1] == None:
+                win.destroy()
+            else:
+                self.on_color = color_code[1]
+                # win.destroy()
+                self.top.destroy()
+                self.start_exe()
 
         def off_color():
             color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            self.off_color = color_code[1]
-            # win.destroy()
-            self.top.destroy()
-            self.start_exe()
+            if color_code[1] == None:
+                win.destroy()
+            else:
+                self.off_color = color_code[1]
+                # win.destroy()
+                self.top.destroy()
+                self.start_exe()
 
         def outline_color():
             color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            self.outline = color_code[1]
-            # win.destroy()
-            self.top.destroy()
-            self.start_exe()
+            if color_code[1] == None:
+                win.destroy()
+            else:
+                self.outline = color_code[1]
+                # win.destroy()
+                self.top.destroy()
+                self.start_exe()
 
         def background_color():
             color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            self.background = color_code[1]
-
-            # win.destroy()
-            self.top.destroy()
-            self.start_exe()
+            if color_code[1] == None:
+                win.destroy()
+            else:
+                self.background = color_code[1]
+                # win.destroy()
+                self.top.destroy()
+                self.start_exe()
 
         color_code_button = Button(
             frame,
