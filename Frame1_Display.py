@@ -71,7 +71,7 @@ class Frame1_Input_Display:
 
     # test = False
     # Button Details
-    width = 5
+    width = 3
     # on_color = "white"
     on_color = "#FFFFFF"
     off_color = "#000000"
@@ -93,7 +93,17 @@ class Frame1_Input_Display:
     # a subclass of Canvas for dealing with resizing of windows
 
     def save(self):
-        final_dump = [self.width, self.set_res, self.scale, self.boot_warning]
+        final_dump = [
+            self.width,
+            self.set_res,
+            self.scale,
+            self.boot_warning,
+            self.on_color,
+            self.off_color,
+            self.outline,
+            self.background,
+            self.resizeable,
+        ]
         pickle_file = open("config.txt", "wb")
         pickle_file.truncate(0)
         pickle.dump(final_dump, pickle_file)
@@ -106,10 +116,11 @@ class Frame1_Input_Display:
         self.window_height = self.set_res.split("x")[1]
         self.scale = load[2]
         self.boot_warning = load[3]
-
-    """def on_closing(self):
-        self.save()
-        self.top.destroy()"""
+        self.on_color = load[4]
+        self.off_color = load[5]
+        self.outline = load[6]
+        self.background = load[7]
+        self.resizeable = load[8]
 
     def __init__(self):
         print("start")
@@ -181,176 +192,6 @@ class Frame1_Input_Display:
             else:
                 self.rotation_positive = False
 
-    def no_frame1_window(self):
-        self.top = Tk()
-        self.top.configure(background=self.background)
-        self.top.wm_title("No Frame1 :(")
-        self.top.geometry("500x300")
-        self.top.resizable(width=False, height=False)
-        self.top.columnconfigure(0, weight=1)
-        self.top.rowconfigure(0, weight=1)
-        # win.columnconfigure(1, weight=1)
-        frame = Frame(self.top, bg=self.background)
-        frame.grid(column=0, row=0)
-
-        width_label = Label(
-            frame,
-            text="No Frame1 is detected.\nMake sure your controller is plugged in, and that \nthere are no other controllers plugged in.",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        width_label.grid(row=0, column=0)
-        self.top.mainloop()
-
-    def boot_warning_window(self):
-        self.top = Tk()
-        self.top.configure(background=self.background)
-        self.top.wm_title("Warning")
-        self.top.geometry("500x300")
-        self.top.resizable(width=False, height=False)
-        self.top.columnconfigure(0, weight=1)
-        self.top.rowconfigure(0, weight=1)
-        # win.columnconfigure(1, weight=1)
-        frame = Frame(self.top, bg=self.background)
-        frame.grid(column=0, row=0)
-
-        width_label = Label(
-            frame,
-            text="Press 'Ok' when you're ready to detect your Frame1.\n(No other controllers can be plugged in, sorry.)",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        width_label.grid(row=0, column=0)
-        ok_button = Button(
-            frame,
-            text="Ok",
-            command=self.top.destroy,
-            bg=self.background,
-            fg=self.on_color,
-        )
-        ok_button.grid(row=1, column=0)
-        self.top.mainloop()
-
-    def settings_window(self):
-        win = tkinter.Toplevel()
-        win.configure(background=self.background)
-        win.wm_title("Options: Settings")
-        win.geometry("500x300")
-        win.resizable(width=False, height=False)
-        win.columnconfigure(0, weight=1)
-        win.rowconfigure(0, weight=2)
-        # win.columnconfigure(1, weight=1)
-        win.rowconfigure(1, weight=2)
-        win.rowconfigure(2, weight=0)
-
-        topframe = Frame(win, bg=self.background)
-        topframe.grid(column=0, row=0)
-        middleframe = Frame(win, bg=self.background)
-        middleframe.grid(column=0, row=1)
-        bottomframe = Frame(win, bg=self.background)
-        bottomframe.grid(column=0, row=2)
-
-        ### top frame
-
-        width_label = Label(
-            topframe,
-            text="Outline thickness:",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        width_label.grid(row=0, column=0)
-
-        width_spin_var = tkinter.StringVar()
-        width_spin_var.set(str(self.outline))
-        width_spinbox = Spinbox(
-            topframe,
-            from_=1,
-            to=5,
-            textvariable=width_spin_var,
-            state="readonly",
-            width=5,
-        )
-        width_spinbox.grid(row=0, column=1)
-
-        base_resolution_label = Label(
-            topframe,
-            text="Base Resolution:",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        base_resolution_label.grid(row=1, column=0)
-
-        base_resolution_var = tkinter.StringVar()
-
-        base_resolution_combo = ttk.Combobox(
-            topframe, state="readonly", textvariable=base_resolution_var, width=10
-        )
-        base_resolution_combo["values"] = ["600x276", "900x414", "1200x552"]
-        for i in base_resolution_combo["values"]:
-            if i == self.set_res:
-                base_resolution_combo.current(base_resolution_combo["values"].index(i))
-        base_resolution_combo.grid(row=1, column=1)
-
-        ### middle frame
-        lock_window_var = tkinter.BooleanVar()
-        Checkbutton(
-            middleframe,
-            text="Lock Window Size",
-            variable=lock_window_var,
-            fg=self.outline,
-            bg=self.background,
-            onvalue=False,
-            offvalue=True,
-            selectcolor=self.background,
-            activeforeground=self.background,
-        ).grid(row=0, column=0)
-
-        boot_warning_var = tkinter.BooleanVar()
-        Checkbutton(
-            middleframe,
-            text="Wait for user confirmation on launch (intro window)",
-            variable=boot_warning_var,
-            fg=self.outline,
-            bg=self.background,
-            onvalue=True,
-            offvalue=False,
-            selectcolor=self.background,
-            activeforeground=self.background,
-        ).grid(row=1, column=0)
-
-        ### OK and CANCEL buttons - bottom frame
-        def change_and_close_window():
-            self.width = width_spinbox.get()
-            self.resizeable = lock_window_var.get()
-            self.window_width = base_resolution_var.get().split("x")[0]
-            self.window_height = base_resolution_var.get().split("x")[1]
-            # This is dumb and messy, but this properly sets the scaling
-            # depending on the resolution. Goes by place in array.
-            if base_resolution_combo["values"].index(base_resolution_var.get()) == 0:
-                self.scale = 1
-            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 1:
-                self.scale = 1.5
-            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 2:
-                self.scale = 2
-            self.set_res = base_resolution_var.get()
-            self.boot_warning = boot_warning_var.get()
-            ##
-            self.top.destroy()
-            self.start_exe()
-
-        ok_button = Button(
-            bottomframe,
-            text="Ok",
-            command=change_and_close_window,
-            bg=self.background,
-            fg=self.on_color,
-        )
-        ok_button.grid(row=0, column=0)
-
     def colors_window(self):
         win = tkinter.Toplevel()
         win.configure(background=self.background)
@@ -363,61 +204,73 @@ class Frame1_Input_Display:
         frame = Frame(win, bg=self.background)
         frame.grid(column=0, row=0)
 
-        width_label = Label(
-            frame,
-            text="Outline thickness:",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        width_label.grid(row=0, column=0)
-
-        width_spin_var = tkinter.StringVar()
-
-        width_spinbox = Spinbox(frame, from_=1, to=5, textvariable=width_spin_var)
-        width_spinbox.grid(row=0, column=1)
-        """
-        width_label_combo = ttk.Combobox(
-            frame, state="readonly", textvariable=width_label_var, width=10,
-        )
-        width_label_combo["values"] = [
-            "2",
-            "3",
-            "4",
-            "5",
-        ]
-        for i in width_label_combo["values"]:
-            print("i:" + i)
-            print("width:" + str(self.width))
-            if i == str(self.width):
-                print("MATCHED")
-                width_label_combo.current(width_label_combo["values"].index(i))
-        # width_label_combo.current(0)
-        width_label_combo.grid(row=0, column=1)"""
-
-        button_on_color_label = Label(
-            frame,
-            text="Button press color:",
-            fg=self.outline,
-            bg=self.background,
-            font="TkDefaultFont 12",
-        )
-        button_on_color_label.grid(row=1, column=0)
-        button_on_color_var = tkinter.StringVar()
-
-        def choose_color():
+        def choose_color_on_color():
             color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
             self.on_color = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+        def off_color():
+            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+            self.off_color = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+        def outline_color():
+            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+            self.outline = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+        def background_color():
+            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+            self.background = color_code[1]
+
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
 
         color_code_button = Button(
             frame,
-            command=choose_color,
+            command=choose_color_on_color,
             text='Change "Button Press" Color',
-            bg=self.on_color,
+            bg="#000000",
+            fg="#FFFFFF",
         )
-        color_code_button.grid(row=1, column=1)
+        color_code_button.grid(row=0, column=0)
+
+        off_color_button = Button(
+            frame,
+            command=off_color,
+            text='Change "Button Off" Color',
+            bg="#000000",
+            fg="#FFFFFF",
+        )
+        off_color_button.grid(row=1, column=0)
+
+        outline_color_button = Button(
+            frame,
+            command=outline_color,
+            text="Change Outline Color",
+            bg="#000000",
+            fg="#FFFFFF",
+        )
+        outline_color_button.grid(row=2, column=0)
+
+        bg_color_button = Button(
+            frame,
+            command=background_color,
+            text="Change Background Color",
+            bg="#000000",
+            fg="#FFFFFF",
+        )
+        bg_color_button.grid(row=3, column=0)
 
     def start_exe(self):
+
         self.top = Tk()
         self.top.title("Frame1 Display")
         # self.top.bind("<Configure>", self.on_resize)
@@ -460,10 +313,175 @@ class Frame1_Input_Display:
 
         self.top.mainloop()
 
-    """
-    def reset_canvas(self):
-        self.canvas = Canvas(self.top, height=480, width=720, background="green")
-        self.top.after(1000000, self.reset_canvas)"""
+    def settings_window(self):
+        win = tkinter.Toplevel()
+        win.configure(background=self.background)
+        win.wm_title("Options: Settings")
+        win.geometry("500x300")
+        win.resizable(width=False, height=False)
+        win.columnconfigure(0, weight=1)
+        win.rowconfigure(0, weight=2)
+        # win.columnconfigure(1, weight=1)
+        win.rowconfigure(1, weight=2)
+        win.rowconfigure(2, weight=0)
+
+        topframe = Frame(win, bg=self.background)
+        topframe.grid(column=0, row=0)
+        middleframe = Frame(win, bg=self.background)
+        middleframe.grid(column=0, row=1)
+        bottomframe = Frame(win, bg=self.background)
+        bottomframe.grid(column=0, row=2)
+
+        ### top frame
+
+        width_label = Label(
+            topframe,
+            text="Outline thickness:",
+            fg="#FFFFFF",
+            bg="#000000",
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+
+        width_spin_var = tkinter.StringVar()
+        width_spin_var.set(str(self.outline))
+        width_spinbox = Spinbox(
+            topframe,
+            from_=1,
+            to=5,
+            textvariable=width_spin_var,
+            state="readonly",
+            width=5,
+        )
+        width_spinbox.grid(row=0, column=1)
+
+        base_resolution_label = Label(
+            topframe,
+            text="Base Resolution:",
+            fg="#FFFFFF",
+            bg="#000000",
+            font="TkDefaultFont 12",
+        )
+        base_resolution_label.grid(row=1, column=0)
+
+        base_resolution_var = tkinter.StringVar()
+
+        base_resolution_combo = ttk.Combobox(
+            topframe, state="readonly", textvariable=base_resolution_var, width=10
+        )
+        base_resolution_combo["values"] = ["600x276", "900x414", "1200x552"]
+        for i in base_resolution_combo["values"]:
+            if i == self.set_res:
+                base_resolution_combo.current(base_resolution_combo["values"].index(i))
+        base_resolution_combo.grid(row=1, column=1)
+
+        ### middle frame
+        lock_window_var = tkinter.BooleanVar()
+        Checkbutton(
+            middleframe,
+            text="Lock Window Size",
+            variable=lock_window_var,
+            fg="#FFFFFF",
+            bg="#000000",
+            onvalue=False,
+            offvalue=True,
+            selectcolor=self.background,
+            activeforeground=self.background,
+        ).grid(row=0, column=0)
+
+        boot_warning_var = tkinter.BooleanVar()
+        Checkbutton(
+            middleframe,
+            text="Wait for user confirmation on launch (intro window)",
+            variable=boot_warning_var,
+            fg="#FFFFFF",
+            bg="#000000",
+            onvalue=True,
+            offvalue=False,
+            selectcolor=self.background,
+            activeforeground=self.background,
+        ).grid(row=1, column=0)
+
+        ### OK and CANCEL buttons - bottom frame
+        def change_and_close_window():
+            self.width = width_spinbox.get()
+            self.resizeable = lock_window_var.get()
+            self.window_width = base_resolution_var.get().split("x")[0]
+            self.window_height = base_resolution_var.get().split("x")[1]
+            # This is dumb and messy, but this properly sets the scaling
+            # depending on the resolution. Goes by place in array.
+            if base_resolution_combo["values"].index(base_resolution_var.get()) == 0:
+                self.scale = 1
+            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 1:
+                self.scale = 1.5
+            elif base_resolution_combo["values"].index(base_resolution_var.get()) == 2:
+                self.scale = 2
+            self.set_res = base_resolution_var.get()
+            self.boot_warning = boot_warning_var.get()
+            ##
+            self.top.destroy()
+            self.start_exe()
+
+        ok_button = Button(
+            bottomframe,
+            text="Ok",
+            command=change_and_close_window,
+            bg=self.background,
+            fg=self.on_color,
+        )
+        ok_button.grid(row=0, column=0)
+
+    def no_frame1_window(self):
+        self.top = Tk()
+        self.top.configure(background=self.background)
+        self.top.wm_title("No Frame1 :(")
+        self.top.geometry("500x300")
+        self.top.resizable(width=False, height=False)
+        self.top.columnconfigure(0, weight=1)
+        self.top.rowconfigure(0, weight=1)
+        # win.columnconfigure(1, weight=1)
+        frame = Frame(self.top, bg=self.background)
+        frame.grid(column=0, row=0)
+
+        width_label = Label(
+            frame,
+            text="Frame1 was not detected.\n\nMake sure there are no other controllers plugged in and try again.\n",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+        self.top.mainloop()
+
+    def boot_warning_window(self):
+        self.top = Tk()
+        self.top.configure(background=self.background)
+        self.top.wm_title("Warning")
+        self.top.geometry("500x300")
+        self.top.resizable(width=False, height=False)
+        self.top.columnconfigure(0, weight=1)
+        self.top.rowconfigure(0, weight=1)
+        # self.top.columnconfigure(1, weight=1)
+        frame = Frame(self.top, bg=self.background)
+        frame.grid(column=0, row=0)
+        frame.rowconfigure(1, weight=1)
+        width_label = Label(
+            frame,
+            text="Make sure no other controllers are plugged in to continue.\n\nPress 'Ok' when you're ready to detect your Frame1.",
+            fg=self.outline,
+            bg=self.background,
+            font="TkDefaultFont 12",
+        )
+        width_label.grid(row=0, column=0)
+        ok_button = Button(
+            frame,
+            text="Ok",
+            command=self.top.destroy,
+            bg=self.background,
+            fg=self.on_color,
+        )
+        ok_button.grid(row=1, column=0)
+        self.top.mainloop()
 
     def my_after(self):
         self.redraw_new_inputs()  # Redraw appropriate buttons here
