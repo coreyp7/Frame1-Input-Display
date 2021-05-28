@@ -223,7 +223,7 @@ class Frame1_Input_Display:
     def settings_window(self):
         """  Self Explanatory window for changing variables: very simple."""
         win = tkinter.Toplevel()
-        win.configure(background=self.background)
+        win.configure(background="#000000")
         win.wm_title("Options: Settings")
         win.geometry("500x300")
         win.resizable(width=False, height=False)
@@ -233,11 +233,11 @@ class Frame1_Input_Display:
         win.rowconfigure(1, weight=2)
         win.rowconfigure(2, weight=0)
 
-        topframe = Frame(win, bg=self.background)
+        topframe = Frame(win, bg="#000000")
         topframe.grid(column=0, row=0)
-        middleframe = Frame(win, bg=self.background)
+        middleframe = Frame(win, bg="#000000")
         middleframe.grid(column=0, row=1)
-        bottomframe = Frame(win, bg=self.background)
+        bottomframe = Frame(win, bg="#000000")
         bottomframe.grid(column=0, row=2)
 
         ### top frame
@@ -307,8 +307,8 @@ class Frame1_Input_Display:
             bg="#000000",
             onvalue=True,
             offvalue=False,
-            selectcolor=self.background,
-            activeforeground=self.background,
+            selectcolor="#000000",
+            activeforeground="#000000",
         ).grid(row=1, column=0)
 
         ### OK and CANCEL buttons - bottom frame
@@ -335,8 +335,8 @@ class Frame1_Input_Display:
             bottomframe,
             text="Ok",
             command=change_and_close_window,
-            bg=self.background,
-            fg=self.on_color,
+            bg="#000000",
+            fg="#FFFFFF",
         )
         ok_button.grid(row=0, column=0)
 
@@ -386,7 +386,7 @@ class Frame1_Input_Display:
     def no_frame1_window(self):
         """ Window that displays when the Frame1 isn't detected."""
         self.top = Tk()
-        self.top.configure(background=self.background)
+        self.top.configure(background="#000000")
         self.top.wm_title("No Frame1 :(")
         self.top.geometry("500x300")
         self.top.resizable(width=False, height=False)
@@ -399,8 +399,8 @@ class Frame1_Input_Display:
         width_label = Label(
             frame,
             text="Frame1 was not detected.\n\nMake sure there are no other controllers plugged in and try again.\n",
-            fg=self.outline,
-            bg=self.background,
+            fg="#FFFFFF",
+            bg="#000000",
             font="TkDefaultFont 12",
         )
         width_label.grid(row=0, column=0)
@@ -409,25 +409,25 @@ class Frame1_Input_Display:
     def boot_warning_window(self):
         """ A pseudo 'user first launch' window, providing info about how the app works under limitations."""
         self.top = Tk()
-        self.top.configure(background=self.background)
+        self.top.configure(background="#000000")
         self.top.wm_title("Warning")
         self.top.geometry("500x300")
         self.top.resizable(width=False, height=False)
         self.top.columnconfigure(0, weight=1)
         self.top.rowconfigure(0, weight=1)
         # self.top.columnconfigure(1, weight=1)
-        frame = Frame(self.top, bg=self.background)
+        frame = Frame(self.top, bg="#000000")
         frame.grid(column=0, row=0)
         # frame.rowconfigure(1, weight=1)
-        bottomframe = Frame(self.top, bg=self.background)
+        bottomframe = Frame(self.top, bg="#000000")
         bottomframe.grid(column=0, row=1)
         bottomframe.rowconfigure(0, weight=3)
 
         width_label = Label(
             frame,
             text="Make sure no other controllers are plugged in before continuing.\nPress 'Ok' when you're ready to detect your Frame1.",
-            fg=self.outline,
-            bg=self.background,
+            fg="#FFFFFF",
+            bg="#000000",
             font="TkDefaultFont 12",
         )
         width_label.grid(row=0, column=0)
@@ -435,15 +435,15 @@ class Frame1_Input_Display:
             frame,
             text="(You can disable this warning window in the Options/Settings window.)\n\n",
             fg="#a9a9a9",
-            bg=self.background,
+            bg="#000000",
             font="TkDefaultFont 9",
         ).grid(row=1, column=0)
         ok_button = Button(
             frame,
             text="Ok",
             command=self.top.destroy,
-            bg=self.background,
-            fg=self.on_color,
+            bg="#000000",
+            fg="#FFFFFF",
             height=2,
             width=5,
             font="TkDefaultFont 15",
