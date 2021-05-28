@@ -30,13 +30,15 @@ from tkinter import (
 
 
 class Frame1_Input_Display:
+    # API variables
     ret = False
     caps = None
     startInfo = None
     num = 0
     id = None
-    last_input = []
-    #
+    # last_input = []
+    # Button Variables
+
     a = False
     b = False
     x = False
@@ -68,61 +70,19 @@ class Frame1_Input_Display:
     ## VIEW STUFF ##
     top = None
     canvas = None
-
-    # test = False
-    # Button Details
     width = 3
-    # on_color = "white"
     on_color = "#FFFFFF"
     off_color = "#000000"
     outline = "#FFFFFF"
     background = "#000000"
-
-    resizeable = False
-
+    # resizeable = False
     set_res = "600x276"
-
     scale = 1
-
     boot_warning = True
-
-    # window_width
-    # window_height
     ################
 
-    # a subclass of Canvas for dealing with resizing of windows
-
-    def save(self):
-        final_dump = [
-            self.width,
-            self.set_res,
-            self.scale,
-            self.boot_warning,
-            self.on_color,
-            self.off_color,
-            self.outline,
-            self.background,
-            self.resizeable,
-        ]
-        pickle_file = open("config.txt", "wb")
-        pickle_file.truncate(0)
-        pickle.dump(final_dump, pickle_file)
-
-    def load(self):
-        load = pickle.load(open("config.txt", "rb"))
-        self.width = load[0]
-        self.set_res = load[1]
-        self.window_width = self.set_res.split("x")[0]
-        self.window_height = self.set_res.split("x")[1]
-        self.scale = load[2]
-        self.boot_warning = load[3]
-        self.on_color = load[4]
-        self.off_color = load[5]
-        self.outline = load[6]
-        self.background = load[7]
-        self.resizeable = load[8]
-
     def __init__(self):
+
         print("start")
 
         try:
@@ -192,108 +152,22 @@ class Frame1_Input_Display:
             else:
                 self.rotation_positive = False
 
-    def colors_window(self):
-        win = tkinter.Toplevel()
-        win.configure(background=self.background)
-        win.wm_title("Options: Settings")
-        win.geometry("500x300")
-        win.resizable(width=False, height=False)
-        win.columnconfigure(0, weight=1)
-        win.rowconfigure(0, weight=1)
-
-        frame = Frame(win, bg=self.background)
-        frame.grid(column=0, row=0)
-
-        def choose_color_on_color():
-            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            if color_code[1] == None:
-                win.destroy()
-            else:
-                self.on_color = color_code[1]
-                # win.destroy()
-                self.top.destroy()
-                self.start_exe()
-
-        def off_color():
-            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            if color_code[1] == None:
-                win.destroy()
-            else:
-                self.off_color = color_code[1]
-                # win.destroy()
-                self.top.destroy()
-                self.start_exe()
-
-        def outline_color():
-            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            if color_code[1] == None:
-                win.destroy()
-            else:
-                self.outline = color_code[1]
-                # win.destroy()
-                self.top.destroy()
-                self.start_exe()
-
-        def background_color():
-            color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
-            if color_code[1] == None:
-                win.destroy()
-            else:
-                self.background = color_code[1]
-                # win.destroy()
-                self.top.destroy()
-                self.start_exe()
-
-        color_code_button = Button(
-            frame,
-            command=choose_color_on_color,
-            text='Change "Button Press" Color',
-            bg="#000000",
-            fg="#FFFFFF",
-        )
-        color_code_button.grid(row=0, column=0)
-
-        off_color_button = Button(
-            frame,
-            command=off_color,
-            text='Change "Button Off" Color',
-            bg="#000000",
-            fg="#FFFFFF",
-        )
-        off_color_button.grid(row=1, column=0)
-
-        outline_color_button = Button(
-            frame,
-            command=outline_color,
-            text="Change Outline Color",
-            bg="#000000",
-            fg="#FFFFFF",
-        )
-        outline_color_button.grid(row=2, column=0)
-
-        bg_color_button = Button(
-            frame,
-            command=background_color,
-            text="Change Background Color",
-            bg="#000000",
-            fg="#FFFFFF",
-        )
-        bg_color_button.grid(row=3, column=0)
-
     def start_exe(self):
-
+        """
+        General 'Start Execution' Function, which sets top variable to Tk() window and configures it appropriately.
+        Then draws 20 canvas circles using instantiate_ovals()."""
         self.top = Tk()
         self.top.title("Frame1 Display")
-        # self.top.bind("<Configure>", self.on_resize)
-        # self.top.resizable(False, False)
         self.frame = Frame(self.top, width=self.window_width, height=self.window_height)
         self.frame.pack(fill=BOTH, expand=YES)
-        # Checking for if the window is resizable.
+
+        """ Resizeable stuff left over.
         if self.resizeable:
             self.top.resizable(True, True)
         else:
-            self.top.resizable(False, False)
+            self.top.resizable(False, False)"""
 
+        """ Here was when I was using a prefab Resized Canvas. Scrapped for future.
         # ResizingCanvas created here
         self.canvas = ResizingCanvas(
             self.frame,
@@ -302,29 +176,52 @@ class Frame1_Input_Display:
             background=self.background,
             highlightthickness=0,
         )
-        # self.canvas.pack(fill=BOTH, expand=YES)
+        """
+        self.canvas = Canvas(
+            self.frame,
+            height=self.window_height,
+            width=self.window_width,
+            background=self.background,
+            highlightthickness=0,
+        )
+
         self.canvas.pack(expand=YES, fill=BOTH)
-        # self.canvas.bind("<Configure>", self.on_resize)
 
         # Menubar stuff
         menubar = Menu(self.top, bg=self.background, fg="white")
         self.top.config(menu=menubar)
         file_menu = Menu(menubar, tearoff=0, bg="white", fg="black")
         file_menu.add_command(label="Settings", command=self.settings_window)
-        file_menu.add_command(label="Colors", command=self.colors_window)
-        file_menu.add_command(label="Save Current Settings", command=self.save)
+        # file_menu.add_command(label="Colors", command=self.colors_window)
+        file_menu.add_command(label="Save", command=self.save)
+
+        color_menu = Menu(menubar, tearoff=0, bg="white", fg="black")
+        color_menu.add_command(
+            label='Change "button press" color', command=self.choose_color_on_color
+        )
+        color_menu.add_command(
+            label='Change "button off" color', command=self.off_color_menu
+        )
+        color_menu.add_command(
+            label='Change "outline" color', command=self.outline_color
+        )
+        color_menu.add_command(
+            label='Change "background" color', command=self.background_color
+        )
 
         menubar.add_cascade(label="Options", menu=file_menu)
+        menubar.add_cascade(label="Colors", menu=color_menu)
 
         self.instantiate_ovals()
 
-        self.canvas.addtag_all("all")
+        # self.canvas.addtag_all("all")
 
         self.my_after()
 
         self.top.mainloop()
 
     def settings_window(self):
+        """  Self Explanatory window for changing variables: very simple."""
         win = tkinter.Toplevel()
         win.configure(background=self.background)
         win.wm_title("Options: Settings")
@@ -368,7 +265,7 @@ class Frame1_Input_Display:
 
         base_resolution_label = Label(
             topframe,
-            text="Base Resolution:",
+            text="Window Size:",
             fg="#FFFFFF",
             bg="#000000",
             font="TkDefaultFont 12",
@@ -387,6 +284,7 @@ class Frame1_Input_Display:
         base_resolution_combo.grid(row=1, column=1)
 
         ### middle frame
+        """ For if I make it resizeable.
         lock_window_var = tkinter.BooleanVar()
         Checkbutton(
             middleframe,
@@ -398,7 +296,7 @@ class Frame1_Input_Display:
             offvalue=True,
             selectcolor=self.background,
             activeforeground=self.background,
-        ).grid(row=0, column=0)
+        ).grid(row=0, column=0)"""
 
         boot_warning_var = tkinter.BooleanVar()
         Checkbutton(
@@ -416,7 +314,7 @@ class Frame1_Input_Display:
         ### OK and CANCEL buttons - bottom frame
         def change_and_close_window():
             self.width = width_spinbox.get()
-            self.resizeable = lock_window_var.get()
+            # self.resizeable = lock_window_var.get()
             self.window_width = base_resolution_var.get().split("x")[0]
             self.window_height = base_resolution_var.get().split("x")[1]
             # This is dumb and messy, but this properly sets the scaling
@@ -442,7 +340,51 @@ class Frame1_Input_Display:
         )
         ok_button.grid(row=0, column=0)
 
+    """ The next four functions are repetitive, should try to fix in the future.
+        They each display a colorchooser window for setting color of certain variable."""
+
+    def choose_color_on_color(self):
+        color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+        if color_code[1] == None:
+            pass
+        else:
+            self.on_color = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+    def off_color_menu(self):
+        color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+        if color_code[1] == None:
+            pass
+        else:
+            self.off_color = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+    def outline_color(self):
+        color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+        if color_code[1] == None:
+            pass
+        else:
+            self.outline = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
+    def background_color(self):
+        color_code = colorchooser.askcolor(title='Choose "Button Press"color:')
+        if color_code[1] == None:
+            pass
+        else:
+            self.background = color_code[1]
+            # win.destroy()
+            self.top.destroy()
+            self.start_exe()
+
     def no_frame1_window(self):
+        """ Window that displays when the Frame1 isn't detected."""
         self.top = Tk()
         self.top.configure(background=self.background)
         self.top.wm_title("No Frame1 :(")
@@ -465,6 +407,7 @@ class Frame1_Input_Display:
         self.top.mainloop()
 
     def boot_warning_window(self):
+        """ A pseudo 'user first launch' window, providing info about how the app works under limitations."""
         self.top = Tk()
         self.top.configure(background=self.background)
         self.top.wm_title("Warning")
@@ -475,31 +418,48 @@ class Frame1_Input_Display:
         # self.top.columnconfigure(1, weight=1)
         frame = Frame(self.top, bg=self.background)
         frame.grid(column=0, row=0)
-        frame.rowconfigure(1, weight=1)
+        # frame.rowconfigure(1, weight=1)
+        bottomframe = Frame(self.top, bg=self.background)
+        bottomframe.grid(column=0, row=1)
+        bottomframe.rowconfigure(0, weight=3)
+
         width_label = Label(
             frame,
-            text="Make sure no other controllers are plugged in to continue.\n\nPress 'Ok' when you're ready to detect your Frame1.",
+            text="Make sure no other controllers are plugged in before continuing.\nPress 'Ok' when you're ready to detect your Frame1.",
             fg=self.outline,
             bg=self.background,
             font="TkDefaultFont 12",
         )
         width_label.grid(row=0, column=0)
+        Label(
+            frame,
+            text="(You can disable this warning window in the Options/Settings window.)\n\n",
+            fg="#a9a9a9",
+            bg=self.background,
+            font="TkDefaultFont 9",
+        ).grid(row=1, column=0)
         ok_button = Button(
             frame,
             text="Ok",
             command=self.top.destroy,
             bg=self.background,
             fg=self.on_color,
+            height=2,
+            width=5,
+            font="TkDefaultFont 15",
         )
-        ok_button.grid(row=1, column=0)
+        ok_button.grid(row=2, column=0)
         self.top.mainloop()
 
     def my_after(self):
+        """ Puzzling function that runs many times a second, for detecting if buttons need to be filled,
+        and fills them if needed."""
         self.redraw_new_inputs()  # Redraw appropriate buttons here
-        # print(self.canvas.height, self.canvas.width)
         self.top.after(25, self.my_after)  # Repeat in 75
 
     def instantiate_ovals(self):
+        """ For initially drawing ovals on the canvas with their positions and size respectively with the current scale.
+        Also sets variables of each oval being drawn for future use, preventing slow down."""
         self.a_button_display = self.canvas.create_oval(  # A BUTTON
             406 * self.scale,
             189 * self.scale,
@@ -701,6 +661,7 @@ class Frame1_Input_Display:
         )
 
     def redraw_new_inputs(self):
+        """ Gets new inputs and redraws appropriately if any buttons need to be filled / unfilled based on button activity."""
         new_inputs = self.get_input()
 
         if new_inputs[0][0] != self.a:  # A BUTTON
@@ -825,6 +786,7 @@ class Frame1_Input_Display:
             )
 
     def get_input(self):
+        """ Returns input information in a formatted list. Only includes absolute information on if each button is on/off."""
         self.ret, self.info = joystickapi.joyGetPosEx(self.id)
         if self.ret:
             btns = [
@@ -849,7 +811,12 @@ class Frame1_Input_Display:
             return formatted_input_info
 
     def format_input(self, input):
-
+        """ Formats the generic input list into one catered so its easier to look at. Order listed here:
+            [[A, B, X, Y, Start, Z, R, L, LS1, LS2],
+            [Grey Stick Up, Grey Stick Down, Grey Stick Left, Grey Stick Right],
+            [Yellow Stick Up, Yellow Stick Down, Yellow Stick Left, Yellow Stick Right],
+            [modx, mody]]
+             """
         grey_stick = [False, False, False, False]  # Up, Down, Left, Right
         c_stick = [False, False, False, False]  # Up, Down, Left, Right
 
@@ -947,6 +914,45 @@ class Frame1_Input_Display:
 
         return final_formatted_input
 
+    def determine_fill(self, state):
+        """Simple pseudo switch statement where you give it the button status (boolean) and it returns the proper fill color for the display of the button."""
+        switcher = {True: self.on_color, False: self.off_color}
+        return switcher.get(state, "ERROR")
+
+        """ Self explanatory pickling/serialization functions."""
+
+    """ Simple serialization/pickling functions for saving/loading settings."""
+
+    def save(self):
+        final_dump = [
+            self.width,
+            self.set_res,
+            self.scale,
+            self.boot_warning,
+            self.on_color,
+            self.off_color,
+            self.outline,
+            self.background,
+        ]
+        pickle_file = open("config.txt", "wb")
+        pickle_file.truncate(0)
+        pickle.dump(final_dump, pickle_file)
+
+    def load(self):
+        load = pickle.load(open("config.txt", "rb"))
+        self.width = load[0]
+        self.set_res = load[1]
+        self.window_width = self.set_res.split("x")[0]
+        self.window_height = self.set_res.split("x")[1]
+        self.scale = load[2]
+        self.boot_warning = load[3]
+        self.on_color = load[4]
+        self.off_color = load[5]
+        self.outline = load[6]
+        self.background = load[7]
+
+    """ Everything from here on are different checks for mod buttons."""
+
     def modx_check(self, axis):
         return self.vertical_modx_check(axis[1]) or self.horizontal_modx_check(axis[0])
 
@@ -977,54 +983,6 @@ class Frame1_Input_Display:
             return True
         return False
 
-    # Param: Boolean Value
-    # Returns: a string representing a color depending on the given param
-    def determine_fill(self, state):
-        switcher = {True: self.on_color, False: self.off_color}
-        return switcher.get(state, "ERROR")
-
-
-# TEMPORARY SOLUTION FROM INTERNET
-# Will be natively integrated in Frame1_Display or will be abandoned
-# for strict resolutions for display integrity.
-class ResizingCanvas(Canvas):
-    def __init__(self, parent, **kwargs):
-        Canvas.__init__(self, parent, **kwargs)
-        self.bind("<Configure>", self.on_resize)
-        self.height = self.winfo_reqheight()
-        self.width = self.winfo_reqwidth()
-
-    def on_resize(self, event):
-        # determine the ratio of old width/height to new width/height
-        wscale = float(event.width) / self.width
-        hscale = float(event.height) / self.height
-        self.width = event.width
-        self.height = event.height
-        # resize the canvas
-        self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all", 0, 0, wscale, hscale)
-
-
-"""
-class ResizingCanvas(Canvas):
-    def __init__(self, parent, **kwargs):
-        Canvas.__init__(self, parent, **kwargs)
-        self.bind("<Configure>", self.on_resize)
-        self.height = self.winfo_reqheight()
-        self.width = self.winfo_reqwidth()
-
-    def on_resize(self, event):
-        # determine the ratio of old width/height to new width/height
-        wscale = float(event.width) / self.width
-        hscale = float(event.height) / self.height
-        self.width = event.width
-        self.height = event.height
-        # resize the canvas
-        self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all", 0, 0, wscale, hscale)
-"""
 
 if __name__ == "__main__":
     exe = Frame1_Input_Display()
