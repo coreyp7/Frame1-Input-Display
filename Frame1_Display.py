@@ -79,6 +79,7 @@ class Frame1_Input_Display:
     set_res = "600x276"
     scale = 1
     boot_warning = True
+    ico_file = "beef.ico"
     ################
 
     def __init__(self):
@@ -158,8 +159,10 @@ class Frame1_Input_Display:
         Then draws 20 canvas circles using instantiate_ovals()."""
         self.top = Tk()
         self.top.title("Frame1 Display")
+        self.top.iconbitmap(self.ico_file)
         self.frame = Frame(self.top, width=self.window_width, height=self.window_height)
         self.frame.pack(fill=BOTH, expand=YES)
+        self.top.resizable(False, False)
 
         """ Resizeable stuff left over.
         if self.resizeable:
@@ -225,6 +228,7 @@ class Frame1_Input_Display:
         win = tkinter.Toplevel()
         win.configure(background="#000000")
         win.wm_title("Options: Settings")
+        win.iconbitmap(self.ico_file)
         win.geometry("500x300")
         win.resizable(width=False, height=False)
         win.columnconfigure(0, weight=1)
@@ -386,6 +390,7 @@ class Frame1_Input_Display:
     def no_frame1_window(self):
         """ Window that displays when the Frame1 isn't detected."""
         self.top = Tk()
+        self.top.iconbitmap(self.ico_file)
         self.top.configure(background="#000000")
         self.top.wm_title("No Frame1 :(")
         self.top.geometry("500x300")
@@ -409,6 +414,7 @@ class Frame1_Input_Display:
     def boot_warning_window(self):
         """ A pseudo 'user first launch' window, providing info about how the app works under limitations."""
         self.top = Tk()
+        self.top.iconbitmap(self.ico_file)
         self.top.configure(background="#000000")
         self.top.wm_title("Warning")
         self.top.geometry("500x300")
@@ -552,9 +558,9 @@ class Frame1_Input_Display:
 
         self.ls2_button_display = self.canvas.create_oval(  # LS2 BUTTON
             552 * self.scale,
-            45 * self.scale,
+            40 * self.scale,
             587 * self.scale,
-            82 * self.scale,
+            77 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.ls2),
@@ -562,9 +568,9 @@ class Frame1_Input_Display:
 
         self.g_up_button_display = self.canvas.create_oval(  # GREYSTICK UP
             552 * self.scale,
-            88 * self.scale,
+            89 * self.scale,
             587 * self.scale,
-            125 * self.scale,
+            126 * self.scale,
             outline=self.outline,
             width=self.width,
             fill=self.determine_fill(self.g_up),
