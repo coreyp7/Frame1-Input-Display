@@ -1,7 +1,10 @@
 # Frame1 Controller Input Display
+*NOTE: This input display is not an official release from the Frame1 team, this is simply something I made for my personal use.*
 ## Downloads:
-Link for the .zip download here.
-Link for the installer here.
+***You must have [Python](https://www.python.org/downloads/) installed to run either of these.***
+[.zip file](https://drive.google.com/file/d/1YJkDfWtmOmSWDpqrGzKxHmhjGDuk1OeN/view?usp=sharing)
+[Installer](https://drive.google.com/file/d/1HRRzt_gEkd5lBUJlp7h_yCu2TUr2oHg8/view?usp=sharing)
+
 
 ## Resources Utilized:
 
@@ -12,4 +15,9 @@ GUI created with [tkinter](https://docs.python.org/3/library/tkinter.html).
 [Frame1](https://frame1.gg/) Controller created by **Stephen "Greg Turbo" Kasmir**.
 
 ## Project Details:
-Ever since I received my Frame1 controller at the beginning of April, I tried to find an input viewer for the device and couldn't find one. So, I decided to make one for personal use in a couple days. Once it was seemingly operating correctly, I decided to try to spruce it up, make it more useable for other people and release it publicly. 
+Ever since I received my Frame1 controller(solid product so far) at the beginning of April, I tried to find an input viewer for the device and couldn't find one. So, I decided to make one for personal use in a couple days. Once it was seemingly operating correctly, I decided to try to spruce it up, make it *slightly* more useable for other people and release it publicly in case anyone was also looking for something to use. 
+
+So be warned that this hasn't been thoroughly tested or anything, and has some small problems *(although they don't ruin the application for my use)*.
+
+![](https://i.imgur.com/WhXtOPm.png =600x276)![enter image description here](https://i.imgur.com/R20jngB.png  =600x276)
+![enter image description here](https://i.imgur.com/BHFPQYp.png =600x276)

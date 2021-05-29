@@ -110,7 +110,7 @@ class Frame1_Input_Display:
         else:
             print("no gamepad detected")
             self.no_frame1_window()
-            exit(1)
+            exit(0)
 
         # NOTE: have to wait a second for some reason to allow for proper calibration of roation_positive.
         time.sleep(0.5)
