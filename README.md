@@ -2,7 +2,9 @@
 *NOTE: This input display is not an official release from the Frame1 team, this is simply something I made for my personal use.*
 ## Downloads:
 ***You must have [Python](https://www.python.org/downloads/) installed to run either of these.***
+
 [.zip file](https://drive.google.com/file/d/1YJkDfWtmOmSWDpqrGzKxHmhjGDuk1OeN/view?usp=sharing)
+
 [Installer](https://drive.google.com/file/d/1HRRzt_gEkd5lBUJlp7h_yCu2TUr2oHg8/view?usp=sharing)
 
 
@@ -19,5 +21,7 @@ Ever since I received my Frame1 controller(solid product so far) at the beginnin
 
 So be warned that this hasn't been thoroughly tested or anything, and has some small problems *(although they don't ruin the application for my use)*.
 
-![](https://i.imgur.com/WhXtOPm.png =600x276)![enter image description here](https://i.imgur.com/R20jngB.png  =600x276)
-![enter image description here](https://i.imgur.com/BHFPQYp.png =600x276)
+
+![](https://i.imgur.com/Gw4EYmt.png)
+![](https://i.imgur.com/6gQ4spi.png)
+![](https://i.imgur.com/mAEwEXW.png)
