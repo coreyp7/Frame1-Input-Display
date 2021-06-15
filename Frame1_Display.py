@@ -1,8 +1,11 @@
 import tkinter
 import joystickapi
-import msvcrt
-import time
-import os
+
+# import msvcrt
+# import time
+
+# import os
+import sys
 
 # from tkinter import *
 import pickle
@@ -80,6 +83,9 @@ class Frame1_Input_Display:
     scale = 1
     boot_warning = True
     ico_file = "beef.ico"
+    #
+    button_text_mode = True
+    button_text_font = "Arial 15 bold"
     ################
 
     def __init__(self):
@@ -98,6 +104,8 @@ class Frame1_Input_Display:
         if self.boot_warning:
             self.boot_warning_window()
 
+        print("line 102")
+
         self.num = joystickapi.joyGetNumDevs()
         self.ret, self.caps, self.startinfo = False, None, None
         for id in range(self.num):
@@ -105,17 +113,26 @@ class Frame1_Input_Display:
             if self.ret:
                 print("gamepad detected: " + self.caps.szPname)
                 self.ret, self.startinfo = joystickapi.joyGetPosEx(id)
+                print(self.startinfo)
                 self.id = id
                 break
-        else:
+
+        print("line 115")
+        print(self.caps)
+        if self.caps == None:
             print("no gamepad detected")
             self.no_frame1_window()
-            exit(0)
+            sys.exit(1)
+
+        print("pass exit(1) line 121")
 
         # NOTE: have to wait a second for some reason to allow for proper calibration of roation_positive.
-        time.sleep(0.5)
+        # time.sleep(0.5)
+
+        print("slept for 0.5")
 
         # NOTE: Here is where I check what the fuck is up with rotation.
+        print("rotation magic line 129")
         self.ret, self.info = joystickapi.joyGetPosEx(self.id)
         if self.ret:
             btns = [
@@ -154,6 +171,7 @@ class Frame1_Input_Display:
                 self.rotation_positive = False
 
     def start_exe(self):
+        print("EXECUTION HAS BEGUN")
         """
         General 'Start Execution' Function, which sets top variable to Tk() window and configures it appropriately.
         Then draws 20 canvas circles using instantiate_ovals()."""
@@ -216,6 +234,7 @@ class Frame1_Input_Display:
         menubar.add_cascade(label="Colors", menu=color_menu)
 
         self.instantiate_ovals()
+        self.instantiate_letters()
 
         # self.canvas.addtag_all("all")
 
@@ -666,6 +685,171 @@ class Frame1_Input_Display:
             fill=self.determine_fill(self.mod_y),
         )
 
+    def instantiate_letters(self):
+        self.a_button_text_display = self.canvas.create_text(
+            424 * self.scale,
+            208 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="A",
+        )
+
+        self.b_button_text_display = self.canvas.create_text(
+            435 * self.scale,
+            99 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="B",
+        )
+
+        self.x_button_text_display = self.canvas.create_text(
+            478.5 * self.scale,
+            79 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="X",
+        )
+
+        self.y_button_text_display = self.canvas.create_text(
+            478.5 * self.scale,
+            31.5 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="Y",
+        )
+
+        self.start_button_text_display = self.canvas.create_text(
+            304 * self.scale,
+            99 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="Start",
+        )
+
+        self.z_button_text_display = self.canvas.create_text(
+            526 * self.scale,
+            84 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="Z",
+        )
+
+        self.r_button_text_display = self.canvas.create_text(
+            435 * self.scale,
+            50 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="R",
+        )
+
+        self.l_button_text_display = self.canvas.create_text(
+            38 * self.scale,
+            110 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="L",
+        )
+
+        self.ls1_button_text_display = self.canvas.create_text(
+            526 * self.scale,
+            36 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="LS",
+        )
+
+        self.ls2_button_text_display = self.canvas.create_text(
+            570.5 * self.scale,
+            59 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="MS",
+        )
+
+        self.g_up_button_text_display = self.canvas.create_text(
+            570 * self.scale,
+            105 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠕",
+        )
+
+        self.g_down_button_text_display = self.canvas.create_text(
+            126.5 * self.scale,
+            76 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠗",
+        )
+
+        self.g_left_button_text_display = self.canvas.create_text(
+            80 * self.scale,
+            81 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠔",
+        )
+
+        self.g_right_button_text_display = self.canvas.create_text(
+            171 * self.scale,
+            96 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠖",
+        )
+
+        self.c_up_button_text_display = self.canvas.create_text(
+            424 * self.scale,
+            156 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠕",
+        )
+
+        self.c_down_button_text_display = self.canvas.create_text(
+            386 * self.scale,
+            234 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠗",
+        )
+
+        self.c_left_button_text_display = self.canvas.create_text(
+            386 * self.scale,
+            184 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠔",
+        )
+
+        self.c_right_button_text_display = self.canvas.create_text(
+            461 * self.scale,
+            184 * self.scale,
+            fill=self.on_color,
+            font="Arial 40 bold",
+            text="🠖",
+        )
+
+        self.mod_x_button_text_display = self.canvas.create_text(
+            182.5 * self.scale,
+            209 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="MX",
+        )
+
+        self.mod_y_button_text_display = self.canvas.create_text(
+            221 * self.scale,
+            234 * self.scale,
+            fill=self.on_color,
+            font=self.button_text_font,
+            text="MY",
+        )
+
+    def determine_text_fill(self, state):
+        switcher = {True: self.off_color, False: self.on_color}
+        return switcher.get(state, "ERROR")
+
     def redraw_new_inputs(self):
         """ Gets new inputs and redraws appropriately if any buttons need to be filled / unfilled based on button activity."""
         new_inputs = self.get_input()
@@ -676,120 +860,213 @@ class Frame1_Input_Display:
             self.canvas.itemconfig(
                 self.a_button_display, fill=self.determine_fill(self.a)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.a_button_text_display, fill=self.determine_text_fill(self.a)
+                )
 
         if new_inputs[0][1] != self.b:  # B BUTTON
             self.b = not self.b
             self.canvas.itemconfig(
                 self.b_button_display, fill=self.determine_fill(self.b)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.b_button_text_display, fill=self.determine_text_fill(self.b)
+                )
 
         if new_inputs[0][2] != self.x:  # X BUTTON
             self.x = not self.x
             self.canvas.itemconfig(
                 self.x_button_display, fill=self.determine_fill(self.x)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.x_button_text_display, fill=self.determine_text_fill(self.x)
+                )
 
         if new_inputs[0][3] != self.y:  # Y BUTTON
             self.y = not self.y
             self.canvas.itemconfig(
                 self.y_button_display, fill=self.determine_fill(self.y)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.y_button_text_display, fill=self.determine_text_fill(self.y)
+                )
 
         if new_inputs[0][4] != self.start:  # START BUTTON
             self.start = not self.start
             self.canvas.itemconfig(
                 self.start_button_display, fill=self.determine_fill(self.start)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.start_button_text_display,
+                    fill=self.determine_text_fill(self.start),
+                )
 
         if new_inputs[0][5] != self.z:  # Z BUTTON
             self.z = not self.z
             self.canvas.itemconfig(
                 self.z_button_display, fill=self.determine_fill(self.z)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.z_button_text_display, fill=self.determine_text_fill(self.z)
+                )
 
         if new_inputs[0][6] != self.r:  # R BUTTON
             self.r = not self.r
             self.canvas.itemconfig(
                 self.r_button_display, fill=self.determine_fill(self.r)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.r_button_text_display, fill=self.determine_text_fill(self.r)
+                )
 
         if new_inputs[0][7] != self.l:  # L BUTTON
             self.l = not self.l
             self.canvas.itemconfig(
                 self.l_button_display, fill=self.determine_fill(self.l)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.l_button_text_display, fill=self.determine_text_fill(self.l)
+                )
 
         if new_inputs[0][8] != self.ls1:  # LIGHT SHEILD 1 BUTTON
             self.ls1 = not self.ls1
             self.canvas.itemconfig(
                 self.ls1_button_display, fill=self.determine_fill(self.ls1)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.ls1_button_text_display,
+                    fill=self.determine_text_fill(self.ls1),
+                )
 
         if new_inputs[0][9] != self.ls2:  # LIGHT SHEILD 2 BUTTON
             self.ls2 = not self.ls2
             self.canvas.itemconfig(
                 self.ls2_button_display, fill=self.determine_fill(self.ls2)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.ls2_button_text_display,
+                    fill=self.determine_text_fill(self.ls2),
+                )
 
         if new_inputs[1][0] != self.g_up:  # Z BUTTON
             self.g_up = not self.g_up
             self.canvas.itemconfig(
                 self.g_up_button_display, fill=self.determine_fill(self.g_up)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.g_up_button_text_display,
+                    fill=self.determine_text_fill(self.g_up),
+                )
 
         if new_inputs[1][1] != self.g_down:  # GREYSTICK DOWN
             self.g_down = not self.g_down
             self.canvas.itemconfig(
                 self.g_down_button_display, fill=self.determine_fill(self.g_down)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.g_down_button_text_display,
+                    fill=self.determine_text_fill(self.g_down),
+                )
 
         if new_inputs[1][2] != self.g_left:  # GREYSTICK LEFT
             self.g_left = not self.g_left
             self.canvas.itemconfig(
                 self.g_left_button_display, fill=self.determine_fill(self.g_left)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.g_left_button_text_display,
+                    fill=self.determine_text_fill(self.g_left),
+                )
 
         if new_inputs[1][3] != self.g_right:  # GREYSTICK RIGHT
             self.g_right = not self.g_right
             self.canvas.itemconfig(
                 self.g_right_button_display, fill=self.determine_fill(self.g_right)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.g_right_button_text_display,
+                    fill=self.determine_text_fill(self.g_right),
+                )
 
         if new_inputs[2][0] != self.c_up:  # C-STICK UP
             self.c_up = not self.c_up
             self.canvas.itemconfig(
                 self.c_up_button_display, fill=self.determine_fill(self.c_up)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.c_up_button_text_display,
+                    fill=self.determine_text_fill(self.c_up),
+                )
 
         if new_inputs[2][1] != self.c_down:  # C-STICK DOWN
             self.c_down = not self.c_down
             self.canvas.itemconfig(
                 self.c_down_button_display, fill=self.determine_fill(self.c_down)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.c_down_button_text_display,
+                    fill=self.determine_text_fill(self.c_down),
+                )
 
         if new_inputs[2][2] != self.c_left:  # C-STICK LEFT
             self.c_left = not self.c_left
             self.canvas.itemconfig(
                 self.c_left_button_display, fill=self.determine_fill(self.c_left)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.c_left_button_text_display,
+                    fill=self.determine_text_fill(self.c_left),
+                )
 
         if new_inputs[2][3] != self.c_right:  # C-STICK RIGHT
             self.c_right = not self.c_right
             self.canvas.itemconfig(
                 self.c_right_button_display, fill=self.determine_fill(self.c_right)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.c_right_button_text_display,
+                    fill=self.determine_text_fill(self.c_right),
+                )
 
         if new_inputs[3][0] != self.mod_x:  # MOD X
             self.mod_x = not self.mod_x
             self.canvas.itemconfig(
                 self.mod_x_button_display, fill=self.determine_fill(self.mod_x)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.mod_x_button_text_display,
+                    fill=self.determine_text_fill(self.mod_x),
+                )
 
         if new_inputs[3][1] != self.mod_y:  # MOD Y
             self.mod_y = not self.mod_y
             self.canvas.itemconfig(
                 self.mod_y_button_display, fill=self.determine_fill(self.mod_y)
             )
+            if self.button_text_mode:
+                self.canvas.itemconfig(
+                    self.mod_y_button_text_display,
+                    fill=self.determine_text_fill(self.mod_y),
+                )
 
     def get_input(self):
         """ Returns input information in a formatted list. Only includes absolute information on if each button is on/off."""
@@ -811,6 +1088,7 @@ class Frame1_Input_Display:
             ]
 
             formatted_input_info = btns, axisXYZ, axisRUV
+            # print(formatted_input_info)
             # print(formatted_input_info)
             formatted_input_info = self.format_input(formatted_input_info)
             # print(formatted_input_info)
