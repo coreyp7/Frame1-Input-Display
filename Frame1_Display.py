@@ -235,7 +235,10 @@ class Frame1_Input_Display:
         menubar.add_cascade(label="Options", menu=file_menu)
         menubar.add_cascade(label="Colors", menu=color_menu)
 
-        self.instantiate_ovals()
+        if self.gc_color_mode:
+            self.instantiate_ovals_gc_color_mode()
+        else:
+            self.instantiate_ovals()
         # self.instantiate_letters()
 
         # self.canvas.addtag_all("all")
@@ -697,6 +700,208 @@ class Frame1_Input_Display:
             238 * self.scale,
             252 * self.scale,
             outline=self.outline,
+            width=self.width,
+            fill=self.determine_fill(self.mod_y),
+        )
+
+    def instantiate_ovals_gc_color_mode(self):
+        """ Lazy pseudo overloaded function for when we need to create ovals in gc mode. """
+        self.a_button_display = self.canvas.create_oval(  # A BUTTON
+            406 * self.scale,
+            189 * self.scale,
+            441 * self.scale,
+            226 * self.scale,
+            outline="#08bc8c",
+            width=self.width,
+            fill=self.determine_fill(self.a),
+        )
+
+        self.b_button_display = self.canvas.create_oval(  # B BUTTON
+            417 * self.scale,
+            79 * self.scale,
+            452 * self.scale,
+            116 * self.scale,
+            outline="#ff0404",
+            width=self.width,
+            fill=self.determine_fill(self.b),
+        )
+
+        self.x_button_display = self.canvas.create_oval(  # X BUTTON
+            461 * self.scale,
+            59 * self.scale,
+            496 * self.scale,
+            96 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.x),
+        )
+
+        self.y_button_display = self.canvas.create_oval(  # Y BUTTON
+            461 * self.scale,
+            11 * self.scale,
+            496 * self.scale,
+            48 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.y),
+        )
+
+        self.start_button_display = self.canvas.create_oval(  # START BUTTON
+            286 * self.scale,
+            79 * self.scale,
+            321 * self.scale,
+            116 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.start),
+        )
+
+        self.z_button_display = self.canvas.create_oval(  # Z BUTTON
+            508 * self.scale,
+            64 * self.scale,
+            543 * self.scale,
+            101 * self.scale,
+            outline="#5804a8",
+            width=self.width,
+            fill=self.determine_fill(self.z),
+        )
+
+        self.r_button_display = self.canvas.create_oval(  # R BUTTON
+            417 * self.scale,
+            31 * self.scale,
+            452 * self.scale,
+            68 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.r),
+        )
+
+        self.l_button_display = self.canvas.create_oval(  # L BUTTON
+            20 * self.scale,
+            91 * self.scale,
+            55 * self.scale,
+            128 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.l),
+        )
+
+        self.ls1_button_display = self.canvas.create_oval(  # LS1 BUTTON
+            508 * self.scale,
+            17 * self.scale,
+            543 * self.scale,
+            53 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.ls1),
+        )
+
+        self.ls2_button_display = self.canvas.create_oval(  # LS2 BUTTON
+            552 * self.scale,
+            40 * self.scale,
+            587 * self.scale,
+            77 * self.scale,
+            outline="#f0ecec",
+            width=self.width,
+            fill=self.determine_fill(self.ls2),
+        )
+
+        self.g_up_button_display = self.canvas.create_oval(  # GREYSTICK UP
+            552 * self.scale,
+            89 * self.scale,
+            587 * self.scale,
+            126 * self.scale,
+            outline="#c0bcbc",
+            width=self.width,
+            fill=self.determine_fill(self.g_up),
+        )
+
+        self.g_down_button_display = self.canvas.create_oval(  # GREYSTICK DOWN
+            109 * self.scale,
+            59 * self.scale,
+            144 * self.scale,
+            96 * self.scale,
+            outline="#c0bcbc",
+            width=self.width,
+            fill=self.determine_fill(self.g_down),
+        )
+
+        self.g_left_button_display = self.canvas.create_oval(  # GREYSTICK LEFT
+            62 * self.scale,
+            64 * self.scale,
+            97 * self.scale,
+            101 * self.scale,
+            outline="#c0bcbc",
+            width=self.width,
+            fill=self.determine_fill(self.g_left),
+        )
+
+        self.g_right_button_display = self.canvas.create_oval(  # GREYSTICK RIGHT
+            153 * self.scale,
+            79 * self.scale,
+            188 * self.scale,
+            116 * self.scale,
+            outline="#c0bcbc",
+            width=self.width,
+            fill=self.determine_fill(self.g_right),
+        )
+
+        self.c_up_button_display = self.canvas.create_oval(  # CSTICK UP
+            406 * self.scale,
+            139 * self.scale,
+            441 * self.scale,
+            176 * self.scale,
+            outline="#ffe404",
+            width=self.width,
+            fill=self.determine_fill(self.c_up),
+        )
+
+        self.c_down_button_display = self.canvas.create_oval(  # CSTICK DOWN
+            368 * self.scale,
+            216 * self.scale,
+            403 * self.scale,
+            253 * self.scale,
+            outline="#ffe404",
+            width=self.width,
+            fill=self.determine_fill(self.c_down),
+        )
+
+        self.c_left_button_display = self.canvas.create_oval(  # CSTICK LEFT
+            368 * self.scale,
+            166 * self.scale,
+            403 * self.scale,
+            203 * self.scale,
+            outline="#ffe404",
+            width=self.width,
+            fill=self.determine_fill(self.c_left),
+        )
+
+        self.c_right_button_display = self.canvas.create_oval(  # CSTICK RIGHT
+            443 * self.scale,
+            166 * self.scale,
+            478 * self.scale,
+            203 * self.scale,
+            outline="#ffe404",
+            width=self.width,
+            fill=self.determine_fill(self.c_right),
+        )
+
+        self.mod_x_button_display = self.canvas.create_oval(  # MOD X
+            165 * self.scale,
+            190 * self.scale,
+            200 * self.scale,
+            227 * self.scale,
+            outline="#303030",
+            width=self.width,
+            fill=self.determine_fill(self.mod_x),
+        )
+
+        self.mod_y_button_display = self.canvas.create_oval(  # MOD Y
+            203 * self.scale,
+            215 * self.scale,
+            238 * self.scale,
+            252 * self.scale,
+            outline="#303030",
             width=self.width,
             fill=self.determine_fill(self.mod_y),
         )
@@ -1178,9 +1383,15 @@ class Frame1_Input_Display:
 
         if new_inputs[3][0] != self.mod_x:  # MOD X
             self.mod_x = not self.mod_x
-            self.canvas.itemconfig(
-                self.mod_x_button_display, fill=self.determine_fill(self.mod_x)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.mod_x_button_display,
+                    fill=self.determine_fill_gc_mode(self.mod_x, "#303030"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.mod_x_button_display, fill=self.determine_fill(self.mod_x)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.mod_x_button_text_display,
@@ -1189,9 +1400,15 @@ class Frame1_Input_Display:
 
         if new_inputs[3][1] != self.mod_y:  # MOD Y
             self.mod_y = not self.mod_y
-            self.canvas.itemconfig(
-                self.mod_y_button_display, fill=self.determine_fill(self.mod_y)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.mod_y_button_display,
+                    fill=self.determine_fill_gc_mode(self.mod_y, "#303030"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.mod_y_button_display, fill=self.determine_fill(self.mod_y)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.mod_y_button_text_display,
