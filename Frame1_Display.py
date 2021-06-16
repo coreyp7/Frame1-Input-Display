@@ -84,8 +84,10 @@ class Frame1_Input_Display:
     boot_warning = True
     ico_file = "beef.ico"
     #
-    button_text_mode = True
+    button_text_mode = False
     button_text_font = "Arial 15 bold"
+    #
+    gc_color_mode = True
     ################
 
     def __init__(self):
@@ -234,7 +236,7 @@ class Frame1_Input_Display:
         menubar.add_cascade(label="Colors", menu=color_menu)
 
         self.instantiate_ovals()
-        self.instantiate_letters()
+        # self.instantiate_letters()
 
         # self.canvas.addtag_all("all")
 
@@ -484,7 +486,7 @@ class Frame1_Input_Display:
 
     def instantiate_ovals(self):
         """ For initially drawing ovals on the canvas with their positions and size respectively with the current scale.
-        Also sets variables of each oval being drawn for future use, preventing slow down."""
+        Also sets variables of each oval being drawn for future use, preventing slow down. """
         self.a_button_display = self.canvas.create_oval(  # A BUTTON
             406 * self.scale,
             189 * self.scale,
@@ -857,9 +859,16 @@ class Frame1_Input_Display:
         if new_inputs[0][0] != self.a:  # A BUTTON
             self.a = not self.a
             # use variable of shape (initially instantiated in some startup function) to change fill. Check bookmarked resources.
-            self.canvas.itemconfig(
-                self.a_button_display, fill=self.determine_fill(self.a)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.a_button_display,
+                    fill=self.determine_fill_gc_mode(self.a, "#08bc8c"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.a_button_display, fill=self.determine_fill(self.a)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.a_button_text_display, fill=self.determine_text_fill(self.a)
@@ -867,9 +876,16 @@ class Frame1_Input_Display:
 
         if new_inputs[0][1] != self.b:  # B BUTTON
             self.b = not self.b
-            self.canvas.itemconfig(
-                self.b_button_display, fill=self.determine_fill(self.b)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.b_button_display,
+                    fill=self.determine_fill_gc_mode(self.b, "#ff0404"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.b_button_display, fill=self.determine_fill(self.b)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.b_button_text_display, fill=self.determine_text_fill(self.b)
@@ -877,9 +893,15 @@ class Frame1_Input_Display:
 
         if new_inputs[0][2] != self.x:  # X BUTTON
             self.x = not self.x
-            self.canvas.itemconfig(
-                self.x_button_display, fill=self.determine_fill(self.x)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.x_button_display,
+                    fill=self.determine_fill_gc_mode(self.x, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.x_button_display, fill=self.determine_fill(self.x)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.x_button_text_display, fill=self.determine_text_fill(self.x)
@@ -887,9 +909,15 @@ class Frame1_Input_Display:
 
         if new_inputs[0][3] != self.y:  # Y BUTTON
             self.y = not self.y
-            self.canvas.itemconfig(
-                self.y_button_display, fill=self.determine_fill(self.y)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.y_button_display,
+                    fill=self.determine_fill_gc_mode(self.y, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.y_button_display, fill=self.determine_fill(self.y)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.y_button_text_display, fill=self.determine_text_fill(self.y)
@@ -897,9 +925,16 @@ class Frame1_Input_Display:
 
         if new_inputs[0][4] != self.start:  # START BUTTON
             self.start = not self.start
-            self.canvas.itemconfig(
-                self.start_button_display, fill=self.determine_fill(self.start)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.start_button_display,
+                    fill=self.determine_fill_gc_mode(self.start, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.start_button_display, fill=self.determine_fill(self.start)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.start_button_text_display,
@@ -908,9 +943,16 @@ class Frame1_Input_Display:
 
         if new_inputs[0][5] != self.z:  # Z BUTTON
             self.z = not self.z
-            self.canvas.itemconfig(
-                self.z_button_display, fill=self.determine_fill(self.z)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.z_button_display,
+                    fill=self.determine_fill_gc_mode(self.z, "#5804a8"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.z_button_display, fill=self.determine_fill(self.z)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.z_button_text_display, fill=self.determine_text_fill(self.z)
@@ -918,9 +960,16 @@ class Frame1_Input_Display:
 
         if new_inputs[0][6] != self.r:  # R BUTTON
             self.r = not self.r
-            self.canvas.itemconfig(
-                self.r_button_display, fill=self.determine_fill(self.r)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.r_button_display,
+                    fill=self.determine_fill_gc_mode(self.r, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.r_button_display, fill=self.determine_fill(self.r)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.r_button_text_display, fill=self.determine_text_fill(self.r)
@@ -928,9 +977,16 @@ class Frame1_Input_Display:
 
         if new_inputs[0][7] != self.l:  # L BUTTON
             self.l = not self.l
-            self.canvas.itemconfig(
-                self.l_button_display, fill=self.determine_fill(self.l)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.l_button_display,
+                    fill=self.determine_fill_gc_mode(self.l, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.l_button_display, fill=self.determine_fill(self.l)
+                )
+
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.l_button_text_display, fill=self.determine_text_fill(self.l)
@@ -938,9 +994,15 @@ class Frame1_Input_Display:
 
         if new_inputs[0][8] != self.ls1:  # LIGHT SHEILD 1 BUTTON
             self.ls1 = not self.ls1
-            self.canvas.itemconfig(
-                self.ls1_button_display, fill=self.determine_fill(self.ls1)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.ls1_button_display,
+                    fill=self.determine_fill_gc_mode(self.ls1, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.ls1_button_display, fill=self.determine_fill(self.ls1)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.ls1_button_text_display,
@@ -949,9 +1011,15 @@ class Frame1_Input_Display:
 
         if new_inputs[0][9] != self.ls2:  # LIGHT SHEILD 2 BUTTON
             self.ls2 = not self.ls2
-            self.canvas.itemconfig(
-                self.ls2_button_display, fill=self.determine_fill(self.ls2)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.ls2_button_display,
+                    fill=self.determine_fill_gc_mode(self.ls2, "#f0ecec"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.ls2_button_display, fill=self.determine_fill(self.ls2)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.ls2_button_text_display,
@@ -960,9 +1028,15 @@ class Frame1_Input_Display:
 
         if new_inputs[1][0] != self.g_up:  # Z BUTTON
             self.g_up = not self.g_up
-            self.canvas.itemconfig(
-                self.g_up_button_display, fill=self.determine_fill(self.g_up)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.g_up_button_display,
+                    fill=self.determine_fill_gc_mode(self.g_up, "#c0bcbc"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.g_up_button_display, fill=self.determine_fill(self.g_up)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.g_up_button_text_display,
@@ -971,9 +1045,15 @@ class Frame1_Input_Display:
 
         if new_inputs[1][1] != self.g_down:  # GREYSTICK DOWN
             self.g_down = not self.g_down
-            self.canvas.itemconfig(
-                self.g_down_button_display, fill=self.determine_fill(self.g_down)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.g_down_button_display,
+                    fill=self.determine_fill_gc_mode(self.g_down, "#c0bcbc"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.g_down_button_display, fill=self.determine_fill(self.g_down)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.g_down_button_text_display,
@@ -982,9 +1062,15 @@ class Frame1_Input_Display:
 
         if new_inputs[1][2] != self.g_left:  # GREYSTICK LEFT
             self.g_left = not self.g_left
-            self.canvas.itemconfig(
-                self.g_left_button_display, fill=self.determine_fill(self.g_left)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.g_left_button_display,
+                    fill=self.determine_fill_gc_mode(self.g_left, "#c0bcbc"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.g_left_button_display, fill=self.determine_fill(self.g_left)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.g_left_button_text_display,
@@ -993,9 +1079,15 @@ class Frame1_Input_Display:
 
         if new_inputs[1][3] != self.g_right:  # GREYSTICK RIGHT
             self.g_right = not self.g_right
-            self.canvas.itemconfig(
-                self.g_right_button_display, fill=self.determine_fill(self.g_right)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.g_right_button_display,
+                    fill=self.determine_fill_gc_mode(self.g_right, "#c0bcbc"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.g_right_button_display, fill=self.determine_fill(self.g_right)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.g_right_button_text_display,
@@ -1004,9 +1096,15 @@ class Frame1_Input_Display:
 
         if new_inputs[2][0] != self.c_up:  # C-STICK UP
             self.c_up = not self.c_up
-            self.canvas.itemconfig(
-                self.c_up_button_display, fill=self.determine_fill(self.c_up)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.c_up_button_display,
+                    fill=self.determine_fill_gc_mode(self.c_up, "#ffe404"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.c_up_button_display, fill=self.determine_fill(self.c_up)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.c_up_button_text_display,
@@ -1015,9 +1113,15 @@ class Frame1_Input_Display:
 
         if new_inputs[2][1] != self.c_down:  # C-STICK DOWN
             self.c_down = not self.c_down
-            self.canvas.itemconfig(
-                self.c_down_button_display, fill=self.determine_fill(self.c_down)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.c_down_button_display,
+                    fill=self.determine_fill_gc_mode(self.c_down, "#ffe404"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.c_down_button_display, fill=self.determine_fill(self.c_down)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.c_down_button_text_display,
@@ -1026,9 +1130,15 @@ class Frame1_Input_Display:
 
         if new_inputs[2][2] != self.c_left:  # C-STICK LEFT
             self.c_left = not self.c_left
-            self.canvas.itemconfig(
-                self.c_left_button_display, fill=self.determine_fill(self.c_left)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.c_left_button_display,
+                    fill=self.determine_fill_gc_mode(self.c_left, "#ffe404"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.c_left_button_display, fill=self.determine_fill(self.c_left)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.c_left_button_text_display,
@@ -1037,9 +1147,15 @@ class Frame1_Input_Display:
 
         if new_inputs[2][3] != self.c_right:  # C-STICK RIGHT
             self.c_right = not self.c_right
-            self.canvas.itemconfig(
-                self.c_right_button_display, fill=self.determine_fill(self.c_right)
-            )
+            if self.gc_color_mode:
+                self.canvas.itemconfig(
+                    self.c_right_button_display,
+                    fill=self.determine_fill_gc_mode(self.c_right, "#ffe404"),
+                )
+            else:
+                self.canvas.itemconfig(
+                    self.c_right_button_display, fill=self.determine_fill(self.c_right)
+                )
             if self.button_text_mode:
                 self.canvas.itemconfig(
                     self.c_right_button_text_display,
@@ -1204,6 +1320,10 @@ class Frame1_Input_Display:
         return switcher.get(state, "ERROR")
 
         """ Self explanatory pickling/serialization functions."""
+
+    def determine_fill_gc_mode(self, state, color):
+        switcher = {True: color, False: self.off_color}
+        return switcher.get(state, "ERROR")
 
     """ Simple serialization/pickling functions for saving/loading settings."""
 
