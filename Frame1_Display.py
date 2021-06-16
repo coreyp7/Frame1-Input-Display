@@ -336,6 +336,19 @@ class Frame1_Input_Display:
             activeforeground="#000000",
         ).grid(row=1, column=0)
 
+        gc_color_mode_var = tkinter.BooleanVar()
+        Checkbutton(
+            middleframe,
+            text="GameCube button color mode",
+            variable=gc_color_mode_var,
+            fg="#FFFFFF",
+            bg="#000000",
+            onvalue=True,
+            offvalue=False,
+            selectcolor="#000000",
+            activeforeground="#000000",
+        ).grid(row=2, column=0)
+
         ### OK and CANCEL buttons - bottom frame
         def change_and_close_window():
             self.width = width_spinbox.get()
@@ -352,6 +365,7 @@ class Frame1_Input_Display:
                 self.scale = 2
             self.set_res = base_resolution_var.get()
             self.boot_warning = boot_warning_var.get()
+            self.gc_color_mode = gc_color_mode_var.get()
             ##
             self.top.destroy()
             self.start_exe()
@@ -1322,6 +1336,7 @@ class Frame1_Input_Display:
         """ Self explanatory pickling/serialization functions."""
 
     def determine_fill_gc_mode(self, state, color):
+        """ Only for use in GC color mode. Extra lazy param so that the function can return the color given if state == True."""
         switcher = {True: color, False: self.off_color}
         return switcher.get(state, "ERROR")
 
@@ -1337,6 +1352,7 @@ class Frame1_Input_Display:
             self.off_color,
             self.outline,
             self.background,
+            self.gc_color_mode,
         ]
         pickle_file = open("config.txt", "wb")
         pickle_file.truncate(0)
@@ -1354,6 +1370,7 @@ class Frame1_Input_Display:
         self.off_color = load[5]
         self.outline = load[6]
         self.background = load[7]
+        self.gc_color_mode = load[8]
 
     """ Everything from here on are different checks for mod buttons."""
 
