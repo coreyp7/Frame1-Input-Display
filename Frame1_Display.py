@@ -112,7 +112,7 @@ class Frame1_Input_Display:
         self.ret, self.caps, self.startinfo = False, None, None
         for id in range(self.num):
             self.ret, self.caps = joystickapi.joyGetDevCaps(id)
-            if self.ret:
+            if self.ret and self.caps.wNumButtons > 0:
                 print("gamepad detected: " + self.caps.szPname)
                 self.ret, self.startinfo = joystickapi.joyGetPosEx(id)
                 print(self.startinfo)
